@@ -3,8 +3,10 @@ package com.ysu.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ysu.entity.Auth;
+import com.ysu.entity.Role;
 import com.ysu.entity.User;
 import com.ysu.service.AuthService;
+import com.ysu.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,17 +20,21 @@ import java.util.List;
 /**
  * Created by 万恶de亚撒西 on 2020/9/15.
  */
-@Controller(value = "permission")
+@Controller
+@RequestMapping(value = "/permission")
 public class PermissionController {
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private RoleService roleService;
 
     @RequestMapping(value="index")
     public String index() {
         return "permission/index";
     }
-    @RequestMapping(value="auth")
-    public String auth(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
+    @RequestMapping(value="authIndex")
+    public String authIndex(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
         PageHelper.startPage(pn,1);
         List<Auth> auths = authService.queryAllAuths();
@@ -39,7 +45,21 @@ public class PermissionController {
         //封装了分页的信息,6表示底部连续显示的页数
         PageInfo page = new PageInfo(auths, 6);
         model.addAttribute("pageInfo",page);
-        return "permission/auth";
+        return "permission/authIndex";
+    }
+    @RequestMapping(value="roleIndex")
+    public String roleIndex(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
+        //传入当前页，以及页面的大小
+        PageHelper.startPage(pn,1);
+        List<Role> roles = roleService.queryAllRole();
+        for(Role role: roles) {
+            System.out.println(role);
+        }
+        //pageinfo包装查询后的结果，只需要将pageinfo交给页面就行
+        //封装了分页的信息,6表示底部连续显示的页数
+        PageInfo page = new PageInfo(roles, 6);
+        model.addAttribute("pageInfo",page);
+        return "permission/roleIndex";
     }
     @ResponseBody
     @RequestMapping(value="loadData")
