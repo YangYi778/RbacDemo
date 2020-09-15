@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ysu.repository.AuthRepository">
+	<select id="queryChildAuths" parameterType="int" resultType="Auth">
+		select * from tb_auth where authParentRoot = #{authParentRoot}
+	</select>
+
+	<select id="queryAllAuths" resultType="Auth">
+		select * from tb_auth
+	</select>
+
+	<select id="queryAuthByUser" resultType="Auth" parameterType="User">
+		select * from tb_auth where id in(select authId from tb_role_auth where roleId in(select roleId from tb_user_role where userId=#{userId}))
+	</select>
+
+</mapper>
