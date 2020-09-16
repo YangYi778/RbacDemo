@@ -58,7 +58,7 @@ public class UserController {
     @ResponseBody
     @RequestMapping(value="doAjaxLogin")
     public Object doAjaxLogin(User user, HttpSession session) {
-        System.out.println("user=====" + user);
+        //System.out.println("user=====" + user);
         AjaxResult result = new AjaxResult();	//ajax返回的对象
         User u = userService.login(user);
         if(u != null) {
@@ -66,18 +66,18 @@ public class UserController {
             //获取用户权限
             Auth root = null;
             List<Auth> auths = authService.queryAuthByUser(u);	//传入用户id
-            System.out.println(">>>>>>>>>>>>>>>" + auths + "************");
+            //System.out.println(">>>>>>>>>>>>>>>" + auths + "************");
             Map<Integer,Auth> authMap = new HashMap<Integer, Auth>();
             for(Auth auth : auths) {
-                System.out.println("++++++++++++" + auth);
+                //System.out.println("++++++++++++" + auth);
                 Auth child = auth;
                 if(child.getAuthParentRoot() == 0) {
                     root = auth;
                     authMap.put(child.getId(), child);
                 }else {
-                    System.out.println("@@@@@@@@@@@@@@"+authMap);
+                    //System.out.println("@@@@@@@@@@@@@@"+authMap);
                     Auth parent = authMap.get(child.getAuthParentRoot());
-                    System.out.println("------------"+ parent);
+                    //System.out.println("------------"+ parent);
                     parent.getChildren().add(child);
                     authMap.put(child.getId(), child);
                 }
