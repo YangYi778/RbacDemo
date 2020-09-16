@@ -4,7 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ysu.entity.Auth;
 import com.ysu.entity.Role;
-import com.ysu.entity.User;
 import com.ysu.service.AuthService;
 import com.ysu.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +28,13 @@ public class PermissionController {
     @Autowired
     private RoleService roleService;
 
+    /**
+     * ztree遍历——测试使用
+     * @return
+     */
     @RequestMapping(value="index")
     public String index() {
-        return "permission/index";
+        return "treetest";
     }
     @RequestMapping(value="authIndex")
     public String authIndex(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
@@ -47,6 +50,13 @@ public class PermissionController {
         model.addAttribute("pageInfo",page);
         return "permission/authIndex";
     }
+
+    /**
+     * 角色维护首页——用于展示当前已存在的角色信息列表
+     * @param pn
+     * @param model
+     * @return
+     */
     @RequestMapping(value="roleIndex")
     public String roleIndex(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
@@ -61,6 +71,11 @@ public class PermissionController {
         model.addAttribute("pageInfo",page);
         return "permission/roleIndex";
     }
+
+    /**
+     * 加载菜单树——测试使用
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value="loadData")
     public Object loadData() {

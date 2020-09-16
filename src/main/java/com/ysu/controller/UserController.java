@@ -37,17 +37,28 @@ public class UserController {
     @Autowired
     private AuthService authService;
 
+    /**
+     * 网站首页展示——暂未用到
+     * @return
+     */
     @RequestMapping("/main")
     public String main(){
         return "main";
     }
 
+    /**
+     * 登录页面——用于导航栏或其他链接，方便快速跳转到登录页
+     * @return
+     */
     @RequestMapping(value = "login")
     public String login(){
         return "login";
     }
 
-
+    /**
+     * 查询所有用户信息——测试使用
+     * @return
+     */
     @RequestMapping("/queryAllUser")
     public ModelAndView queryAllUser(){
         ModelAndView modelAndView = new ModelAndView();
@@ -55,6 +66,13 @@ public class UserController {
         modelAndView.addObject("list",userService.queryAllUser());
         return modelAndView;
     }
+
+    /**
+     * ajax登录——用于异步请求登录及权限树遍历
+     * @param user
+     * @param session
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value="doAjaxLogin")
     public Object doAjaxLogin(User user, HttpSession session) {
@@ -91,7 +109,7 @@ public class UserController {
         return result;
     }
     /**
-     * 用户首页
+     * 用户首页——用于展示当前已存在的用户信息
      */
     @RequestMapping(value="index")
     public String index(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
@@ -105,9 +123,15 @@ public class UserController {
         //封装了分页的信息,6表示底部连续显示的页数
         PageInfo page = new PageInfo(users, 6);
         model.addAttribute("pageInfo",page);
-        return "user/index";
+        return "permission/index";
     }
 
+    /**
+     * 角色分配——用于实现为当前用户的角色分配
+     * @param id
+     * @param model
+     * @return
+     */
     @RequestMapping(value="assign")
     public String assign(Integer id, Model model) {
         //根据用户id查找所有
@@ -140,7 +164,7 @@ public class UserController {
     }
 
     /**
-     * 分配角色
+     * 分配角色——对应页面 >> 按钮
      */
     @ResponseBody
     @RequestMapping(value="doAssign")
@@ -163,7 +187,7 @@ public class UserController {
 
     }
     /**
-     * 分配角色
+     * 取消分配角色——对应页面 << 按钮
      */
     @ResponseBody
     @RequestMapping(value="dounAssign")
