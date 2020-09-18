@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.ysu.entity.Auth;
 import com.ysu.entity.Role;
+import com.ysu.entity.User;
 import com.ysu.service.AuthService;
 import com.ysu.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,7 @@ public class PermissionController {
     @Autowired
     private RoleService roleService;
 
-    /**
-     * ztree遍历——测试使用
-     * @return
-     */
-    @RequestMapping(value="index")
-    public String index() {
-        return "treetest";
-    }
+
     @RequestMapping(value="authIndex")
     public String authIndex(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
