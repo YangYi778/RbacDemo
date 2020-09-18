@@ -1,6 +1,0 @@
-com\ysu\entity\User.class
-com\ysu\web\ServiceListener.class
-com\ysu\controller\UserController.class
-com\ysu\repository\UserRepository.class
-com\ysu\service\UserService.class
-com\ysu\service\impl\UserServiceImpl.class
