@@ -51,7 +51,7 @@
                         <button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
                     <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
-                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
+                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i>生成试卷</button>
                     <br>
                     <hr style="clear:both;">
                     <div class="table-responsive">
@@ -60,25 +60,31 @@
                             <tr >
                                 <th width="30">#</th>
                                 <th width="30"><input type="checkbox"></th>
-                                <th>账号</th>
-                                <th>密码</th>
-                                <th>真实姓名</th>
-                                <th>用户状态</th>
+                                <th>试卷类别</th>
+                                <th>试卷名称</th>
+                                <th>试卷等级</th>
+                                <th>试卷分值</th>
+                                <th>考试时长</th>
+                                <th>创建时间</th>
+                                <th>试卷状态</th>
                                 <th width="100">操作</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach items="${pageInfo.list }" var="user" varStatus="s">
+                            <c:forEach items="${pageInfo.list }" var="paper" varStatus="p">
                                 <tr>
-                                    <td>${s.count }</td>
+                                    <td>${p.count }</td>
                                     <td><input type="checkbox"></td>
-                                    <td>${user.userName }</td>
-                                    <td>${user.password }</td>
-                                    <td>${user.userTrueName }</td>
-                                    <td>${user.userState }</td>
+                                    <td>${paper.paperType }</td>
+                                    <td>${paper.paperName }</td>
+                                    <td>${paper.paperDegree }</td>
+                                    <td>${paper.paperScore }</td>
+                                    <td>${paper.examTime }</td>
+                                    <td>${paper.createDate }</td>
+                                    <td>${paper.paperStatus }</td>
                                     <td>
-                                        <button type="button" id="assignRole" onclick="assignRole(${user.userId })" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>
-                                        <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
+                                        <button type="button" id="releasePaper" onclick="assignRole(${paper.id })" class="btn btn-success btn-xs"><i class="glyphicon glyphicon-circle-arrow-up"></i></button>
+                                        <button type="button" id="updatePaper" onclick="updatePaper(${paper.id })" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
                                         <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
                                     </td>
                                 </tr>
@@ -90,20 +96,20 @@
                                     <ul class="pagination">
                                         <li><a href="index?pn=1">首页</a></li>
                                         <c:if test="${pageInfo.hasPreviousPage }">
-                                            <li><a href="index?pn=${pageInfo.pageNum-1 }" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                                            <li><a href="paper?pn=${pageInfo.pageNum-1 }" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
                                         </c:if>
                                         <c:forEach items="${pageInfo.navigatepageNums }" var="page_Num">
                                             <c:if test="${page_Num == pageInfo.pageNum }">
                                                 <li class="active"><a href="#">${page_Num }</a></li>
                                             </c:if>
                                             <c:if test="${page_Num != pageInfo.pageNum }">
-                                                <li><a href="index?pn=${page_Num }">${page_Num }</a></li>
+                                                <li><a href="paper?pn=${page_Num }">${page_Num }</a></li>
                                             </c:if>
                                         </c:forEach>
                                         <c:if test="${pageInfo.hasNextPage }">
-                                            <li><a href="index?pn=${pageInfo.pageNum+1 }" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                                            <li><a href="paper?pn=${pageInfo.pageNum+1 }" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
                                         </c:if>
-                                        <li><a href="index?pn=${pageInfo.pages }">尾页</a></li>
+                                        <li><a href="paper?pn=${pageInfo.pages }">尾页</a></li>
                                     </ul>
                                 </td>
                             </tr>
@@ -139,9 +145,9 @@
     $("tbody .btn-primary").click(function(){
         window.location.href = "edit.html";
     }); */
-    function assignRole(id){
+    function updatePaper(id){
         //alert("assignRole" + id);
-        location.href = "${PATH}/user/assign?id="+id;
+        location.href = "${PATH}/exam/paperUpdate?id="+id;
     }
 </script>
 </body>

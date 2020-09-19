@@ -60,25 +60,37 @@
                             <tr >
                                 <th width="30">#</th>
                                 <th width="30"><input type="checkbox"></th>
-                                <th>账号</th>
-                                <th>密码</th>
-                                <th>真实姓名</th>
-                                <th>用户状态</th>
+                                <th width="80px">科目归属</th>
+                                <th>试题题干</th>
+                                <th width="80px">试题类型</th>
+                                <th width="80px">试题分数</th>
+                                <th>选项A</th>
+                                <th>选项B</th>
+                                <th>选项C</th>
+                                <th>选项D</th>
+                                <th width="80px">正确答案</th>
+                                <th>创建时间</th>
                                 <th width="100">操作</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach items="${pageInfo.list }" var="user" varStatus="s">
+                            <c:forEach items="${pageInfo.list }" var="question" varStatus="q">
                                 <tr>
-                                    <td>${s.count }</td>
+                                    <td>${q.count }</td>
                                     <td><input type="checkbox"></td>
-                                    <td>${user.userName }</td>
-                                    <td>${user.password }</td>
-                                    <td>${user.userTrueName }</td>
-                                    <td>${user.userState }</td>
+                                    <td>${question.examCode }</td>
+                                    <td>${question.queInfo }</td>
+                                    <td>${question.queType }</td>
+                                    <td>${question.queScore }</td>
+                                    <td>${question.optA }</td>
+                                    <td>${question.optB }</td>
+                                    <td>${question.optC }</td>
+                                    <td>${question.optD }</td>
+                                    <td>${question.answer }</td>
+                                    <td>${question.createDate }</td>
                                     <td>
-                                        <button type="button" id="assignRole" onclick="assignRole(${user.userId })" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>
-                                        <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
+<%--                                        <button type="button" id="assignRole" onclick="assignRole(${user.userId })" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>--%>
+                                        <button type="button" id="updateExam" onclick="updateExam(${exam.id })" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
                                         <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
                                     </td>
                                 </tr>
@@ -88,22 +100,22 @@
                             <tr >
                                 <td colspan="6" align="center">
                                     <ul class="pagination">
-                                        <li><a href="index?pn=1">首页</a></li>
+                                        <li><a href="question?pn=1">首页</a></li>
                                         <c:if test="${pageInfo.hasPreviousPage }">
-                                            <li><a href="index?pn=${pageInfo.pageNum-1 }" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                                            <li><a href="question?pn=${pageInfo.pageNum-1 }" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
                                         </c:if>
                                         <c:forEach items="${pageInfo.navigatepageNums }" var="page_Num">
                                             <c:if test="${page_Num == pageInfo.pageNum }">
                                                 <li class="active"><a href="#">${page_Num }</a></li>
                                             </c:if>
                                             <c:if test="${page_Num != pageInfo.pageNum }">
-                                                <li><a href="index?pn=${page_Num }">${page_Num }</a></li>
+                                                <li><a href="question?pn=${page_Num }">${page_Num }</a></li>
                                             </c:if>
                                         </c:forEach>
                                         <c:if test="${pageInfo.hasNextPage }">
-                                            <li><a href="index?pn=${pageInfo.pageNum+1 }" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                                            <li><a href="question?pn=${pageInfo.pageNum+1 }" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
                                         </c:if>
-                                        <li><a href="index?pn=${pageInfo.pages }">尾页</a></li>
+                                        <li><a href="question?pn=${pageInfo.pages }">尾页</a></li>
                                     </ul>
                                 </td>
                             </tr>
@@ -139,9 +151,9 @@
     $("tbody .btn-primary").click(function(){
         window.location.href = "edit.html";
     }); */
-    function assignRole(id){
+    function updateExam(id){
         //alert("assignRole" + id);
-        location.href = "${PATH}/user/assign?id="+id;
+        location.href = "${PATH}/exam/updateExam?id="+id;
     }
 </script>
 </body>

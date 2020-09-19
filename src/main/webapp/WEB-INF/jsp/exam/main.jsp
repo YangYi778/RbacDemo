@@ -1,5 +1,11 @@
-<%@ page language="java" contentType="text/html;charset=UTF-8"
-         pageEncoding="UTF-8"%>
+<%--
+  Created by IntelliJ IDEA.
+  User: 万恶de亚撒西
+  Date: 2020/9/16
+  Time: 15:03
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page isELIgnored="false" %>
 <!DOCTYPE html>
@@ -26,38 +32,7 @@
 
 <body>
 
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 用户维护</a></div>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li style="padding-top:8px;">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown">
-                            <i class="glyphicon glyphicon-user"></i> ${user.userName } <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
-                            <li class="divider"></li>
-                            <li><a href="index.html"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li style="margin-left:10px;padding-top:8px;">
-                    <button type="button" class="btn btn-default btn-danger">
-                        <span class="glyphicon glyphicon-question-sign"></span> 帮助
-                    </button>
-                </li>
-            </ul>
-            <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
-            </form>
-        </div>
-    </div>
-</nav>
+<%@include file="/WEB-INF/jsp/common/head.jsp"%>
 
 <div class="container-fluid">
     <div class="row">
@@ -72,17 +47,34 @@
                     <h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
                 </div>
                 <div class="panel-body">
-                    <form class="form-inline" role="form" style="float:left;">
+                    <form action="/exam/queryExam" method="post" class="form-inline" role="form" style="float:left;">
                         <div class="form-group has-feedback">
                             <div class="input-group">
-                                <div class="input-group-addon">查询条件</div>
-                                <input class="form-control has-success" type="text" placeholder="请输入查询条件">
+                                <div class="input-group-addon">考试名称</div>
+                                <input class="form-control has-success" id="paperName" name="paperName" type="text" placeholder="请输入考试名称">
                             </div>
                         </div>
-                        <button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
+                        <div class="form-group has-feedback">
+                            <div class="input-group">
+                                <div class="input-group-addon">考试科目</div>
+                                <select id="paperType" name="paperType" style="width:150px; height:30px;">
+                                    <option value="">全部科目</option>
+                                    <c:forEach items="${exams}" var="exam">
+                                        <option value="${exam.id}">${exam.examName}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
+<%--                        <div class="form-group">--%>
+<%--                            <label for="examType">考试科目</label>--%>
+<%--                            <select id="examType" name="examType" style="width:150px; height:30px;">--%>
+<%--                                <c:forEach items="${exams}" var="exam">--%>
+<%--                                    <option value="${exam.id}">${exam.examName}</option>--%>
+<%--                                </c:forEach>--%>
+<%--                            </select>--%>
+<%--                        </div>--%>
+                        <button type="submit" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
-                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
-                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
                     <br>
                     <hr style="clear:both;">
                     <div class="table-responsive">
@@ -91,26 +83,26 @@
                             <tr >
                                 <th width="30">#</th>
                                 <th width="30"><input type="checkbox"></th>
-                                <th>账号</th>
-                                <th>密码</th>
-                                <th>真实姓名</th>
-                                <th>用户状态</th>
+                                <th>科目代码</th>
+                                <th>考试名称</th>
+                                <th>考试难度</th>
+                                <th>考试分数</th>
+                                <th>考试时长</th>
                                 <th width="100">操作</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach items="${pageInfo.list }" var="user" varStatus="s">
+                            <c:forEach items="${pageInfo.list }" var="paper" varStatus="p">
                                 <tr>
-                                    <td>${s.count }</td>
+                                    <td>${p.count }</td>
                                     <td><input type="checkbox"></td>
-                                    <td>${user.userName }</td>
-                                    <td>${user.password }</td>
-                                    <td>${user.userTrueName }</td>
-                                    <td>${user.userState }</td>
+                                    <td>${paper.paperName }</td>
+                                    <td>${paper.paperType }</td>
+                                    <td>${paper.paperDegree }</td>
+                                    <td>${paper.paperScore }</td>
+                                    <td>${paper.examTime }</td>
                                     <td>
-                                        <button type="button" id="assignRole" onclick="assignRole(${user.userId })" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>
-                                        <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
-                                        <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
+                                        <button type="button" id="startExam" onclick="startExam(${paper.id })" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check">进入考试</i></button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -170,9 +162,10 @@
     $("tbody .btn-primary").click(function(){
         window.location.href = "edit.html";
     }); */
-    function assignRole(id){
+    function startExam(id){
         //alert("assignRole" + id);
-        location.href = "${PATH}/user/assign?id="+id;
+        alert("paperId = " + id);
+        location.href = "${PATH}/exam/startExam?id="+id;
     }
 </script>
 </body>

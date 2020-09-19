@@ -39,12 +39,12 @@ public class UserController {
     @Autowired
     private AuthService authService;
 
-    @RequestMapping("main")
+    @RequestMapping("/main")
     public String main(){
         return "main";
     }
 
-    @RequestMapping("login")
+    @RequestMapping(value = "login")
     public String login(){
         return "login";
     }
@@ -143,7 +143,7 @@ public class UserController {
         return "main";
     }
     /**
-     * 用户首页
+     * 用户首页——用于展示当前已存在的用户信息
      */
     @RequestMapping(value="index")
     public String index(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
@@ -160,6 +160,12 @@ public class UserController {
         return "user/index";
     }
 
+    /**
+     * 角色分配——用于实现为当前用户的角色分配
+     * @param id
+     * @param model
+     * @return
+     */
     @RequestMapping(value="assign")
     public String assign(Integer id, Model model) {
         //根据用户id查找所有
@@ -192,7 +198,7 @@ public class UserController {
     }
 
     /**
-     * 分配角色
+     * 分配角色——对应页面 >> 按钮
      */
     @ResponseBody
     @RequestMapping(value="doAssign")
@@ -215,7 +221,7 @@ public class UserController {
 
     }
     /**
-     * 分配角色
+     * 取消分配角色——对应页面 << 按钮
      */
     @ResponseBody
     @RequestMapping(value="dounAssign")

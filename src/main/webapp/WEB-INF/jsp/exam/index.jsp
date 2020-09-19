@@ -26,7 +26,7 @@
 
 <body>
 
-<%@include file="/WEB-INF/jsp/common/head.jsp"%>
+    <%@include file="/WEB-INF/jsp/common/head.jsp"%>
 
 <div class="container-fluid">
     <div class="row">
@@ -60,25 +60,23 @@
                             <tr >
                                 <th width="30">#</th>
                                 <th width="30"><input type="checkbox"></th>
-                                <th>账号</th>
-                                <th>密码</th>
-                                <th>真实姓名</th>
-                                <th>用户状态</th>
+                                <th>考试代码</th>
+                                <th>考试名称</th>
+                                <th>考试说明</th>
                                 <th width="100">操作</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach items="${pageInfo.list }" var="user" varStatus="s">
+                            <c:forEach items="${pageInfo.list }" var="exam" varStatus="e">
                                 <tr>
-                                    <td>${s.count }</td>
+                                    <td>${e.count }</td>
                                     <td><input type="checkbox"></td>
-                                    <td>${user.userName }</td>
-                                    <td>${user.password }</td>
-                                    <td>${user.userTrueName }</td>
-                                    <td>${user.userState }</td>
+                                    <td>${exam.id }</td>
+                                    <td>${exam.examName }</td>
+                                    <td>${exam.examInfo }</td>
                                     <td>
-                                        <button type="button" id="assignRole" onclick="assignRole(${user.userId })" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>
-                                        <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
+<%--                                        <button type="button" id="assignRole" onclick="assignRole(${user.userId })" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>--%>
+                                        <button type="button" id="updateExam" onclick="updateExam(${exam.id })" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
                                         <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
                                     </td>
                                 </tr>
@@ -139,9 +137,9 @@
     $("tbody .btn-primary").click(function(){
         window.location.href = "edit.html";
     }); */
-    function assignRole(id){
+    function updateExam(id){
         //alert("assignRole" + id);
-        location.href = "${PATH}/user/assign?id="+id;
+        location.href = "${PATH}/exam/updateExam?id="+id;
     }
 </script>
 </body>

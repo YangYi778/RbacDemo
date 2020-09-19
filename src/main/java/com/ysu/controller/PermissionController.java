@@ -29,10 +29,7 @@ public class PermissionController {
     @Autowired
     private RoleService roleService;
 
-    @RequestMapping(value="index")
-    public String index() {
-        return "permission/index";
-    }
+
     @RequestMapping(value="authIndex")
     public String authIndex(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
@@ -47,6 +44,13 @@ public class PermissionController {
         model.addAttribute("pageInfo",page);
         return "permission/authIndex";
     }
+
+    /**
+     * 角色维护首页——用于展示当前已存在的角色信息列表
+     * @param pn
+     * @param model
+     * @return
+     */
     @RequestMapping(value="roleIndex")
     public String roleIndex(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
@@ -61,6 +65,11 @@ public class PermissionController {
         model.addAttribute("pageInfo",page);
         return "permission/roleIndex";
     }
+
+    /**
+     * 加载菜单树——测试使用
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value="loadData")
     public Object loadData() {
