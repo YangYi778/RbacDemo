@@ -160,14 +160,12 @@ public class ExamController {
         return "exam/startExam";
     }
 
-    /**
-     * 根据查询条件显示考试信息
-     * @param paperName
-     * @param examId
-     * @param pn
-     * @param model
-     * @return
-     */
+    /*根据查询条件显示考试信息
+      @param paperName
+      @param examId
+      @param pn
+      @param model
+      @return*/
     @RequestMapping(value = "queryExam")
     public String queryExam(HttpServletRequest request, @RequestParam(value="pn", defaultValue="1")Integer pn, Model model){
         String paperName = request.getParameter("paperName");
