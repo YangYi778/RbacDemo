@@ -10,6 +10,7 @@ import com.ysu.service.AuthService;
 import com.ysu.service.RoleService;
 import com.ysu.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,36 +39,105 @@ public class UserController {
     @Autowired
     private AuthService authService;
 
-    @RequestMapping("/main")
+    @RequestMapping("main")
     public String main(){
         return "main";
     }
 
-    @RequestMapping(value = "login")
+    @RequestMapping("login")
     public String login(){
         return "login";
     }
+    /*@RequestMapping("userLogin")
+    public String userLogin(User user,Model model,HttpSession session){
+        User u=userService.login(user);
+        if(u == null){
+            model.addAttribute("error_message", "您输入的账号与密码不正确,请核实!");
+            return "login";
+        }else if(u.getUserState().equals("1")){
+            model.addAttribute("error_message", "您尚未激活,请打开您的邮箱进行激活操作!");
+            return "login";
+        }else{
+            session.setAttribute("session_user", u);  //用户信息存在session中session_user
+            return "main";
+        }
+    }*/
 
+    @ResponseBody
+    @RequestMapping("register")
+    public Object userRegister(User user,Model model, HttpServletRequest request){
+        AjaxResult result = new AjaxResult();	//ajax返回的对象
+        try {
+            userService.saveUser(user,request);
+            System.out.println("1");
+            //model.addAttribute("message", "注册成功");
+            result.setSuccess(true);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            System.out.println("2");
+           // model.addAttribute("message", "注册失败");
+            result.setSuccess(false);
+        }
+        //返回视图,注册页面
+        return result;
+    }
 
-    @RequestMapping("/queryAllUser")
+    @ResponseBody
+    @RequestMapping(value = "/vaildationLongName",produces={"application/text;charset=utf-8"})
+    public String vaildationLongName(String userName){
+        //检查账号是否存在
+        String result=userService.validateLoginName(userName);
+        return result;
+    }
+
+    @RequestMapping(value="/active")
+    public String active(Model model,String activeCode){
+        try {
+            String message= userService.active(activeCode);
+            System.out.println("3");
+            model.addAttribute("message", !message.equals("") ? message: "激活成功!");
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            System.out.println("4");
+            model.addAttribute("message", "激活失败!");
+        }
+        return "login";
+
+    }
+    //用户退出
+    @RequestMapping(value="/logout")
+    public String logout(HttpSession session){
+        //将用户信息从session中删除
+        session.removeAttribute("session_user");
+        return "login";
+    }
+
+    @RequestMapping("queryAllUser")
     public ModelAndView queryAllUser(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
         modelAndView.addObject("list",userService.queryAllUser());
         return modelAndView;
     }
-    @ResponseBody
-    @RequestMapping(value="doAjaxLogin")
-    public Object doAjaxLogin(User user, HttpSession session) {
-        //System.out.println("user=====" + user);
-        AjaxResult result = new AjaxResult();	//ajax返回的对象
+
+    //@ResponseBody
+    @RequestMapping(value="/doAjaxLogin")
+    public Object doAjaxLogin(User user,Model model,HttpSession session) {
+        //AjaxResult result = new AjaxResult();	//ajax返回的对象
         User u = userService.login(user);
-        if(u != null) {
-            session.setAttribute("user", u);
+        if(u == null){
+            model.addAttribute("error_message", "您输入的账号与密码不正确,请核实!");
+            return "login";
+        }else if(u.getUserState().equals("1")){
+            model.addAttribute("error_message", "您尚未激活,请打开您的邮箱进行激活操作!");
+            return "login";
+        }else{
+            session.setAttribute("user", u);  //用户信息存在session中session_user
             //获取用户权限
             Auth root = null;
             List<Auth> auths = authService.queryAuthByUser(u);	//传入用户id
-            //System.out.println(">>>>>>>>>>>>>>>" + auths + "************");
             Map<Integer,Auth> authMap = new HashMap<Integer, Auth>();
             for(Auth auth : auths) {
                 //System.out.println("++++++++++++" + auth);
@@ -75,20 +146,15 @@ public class UserController {
                     root = auth;
                     authMap.put(child.getId(), child);
                 }else {
-                    //System.out.println("@@@@@@@@@@@@@@"+authMap);
                     Auth parent = authMap.get(child.getAuthParentRoot());
-                    //System.out.println("------------"+ parent);
                     parent.getChildren().add(child);
                     authMap.put(child.getId(), child);
                 }
             }
             session.setAttribute("rootAuth", root);
-
-            result.setSuccess(true);
-        }else {
-            result.setSuccess(false);
+            //result.setSuccess(true);
         }
-        return result;
+        return "main";
     }
     /**
      * 用户首页

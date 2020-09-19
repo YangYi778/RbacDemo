@@ -18,4 +18,6 @@ public class User {
     private Date createDate;
     private Integer updater;
     private Date updateDate;
+    private String email;
+    private String active;
 }

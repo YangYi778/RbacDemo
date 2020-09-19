@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ysu.repository.UserRepository">
+
     <select id="queryAllUser" resultType="User">
         select * from tb_user
     </select>
 
     <select id="login" parameterType="User" resultType="User">
-        select * from tb_user where username = #{userName} and password = #{password}
+        select * from tb_user where userName = #{userName} and password = #{password}
     </select>
 
     <select id="queryUserById" resultType="User">
 		select * from tb_user where userId = #{userId}
 	</select>
 
-    <select id="queryRoleIdsByUserId" resultType="Integer">
+    <select id="queryRoleIdsByUserId" resultType="java.lang.Integer">
 		select roleId from tb_user_role where userId = #{userId}
 	</select>
 
@@ -33,4 +34,18 @@
         </foreach>
     </delete>
 
+    <select id="validateLoginName" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT  userName FROM tb_user WHERE userName=#{userName}
+    </select>
+    <select id="getUserByActive" resultType="com.ysu.entity.User">
+        SELECT * FROM tb_user WHERE active = #{activeCode}
+    </select>
+
+    <insert id="saveUser" parameterType="com.ysu.entity.User">
+        INSERT INTO tb_user (userName, password, userTrueName, createDate, email, active) VALUES (#{userName}, #{password}, #{userTrueName}, #{createDate}, #{email}, #{active})
+    </insert>
+
+    <update id="active">
+        UPDATE tb_user set userState=0,active='' WHERE active=#{activeCode}
+    </update>
 </mapper>

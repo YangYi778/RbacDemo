@@ -31,8 +31,10 @@
     <!--加载样式文件-->
     <mvc:resources mapping="/css/**" location="/css/" />
     <mvc:resources mapping="/jquery/**" location="/jquery/" />
+    <mvc:resources mapping="/bootstrap/**" location="/bootstrap/"></mvc:resources>
     <mvc:default-servlet-handler />
 
     <!--<mvc:view-controller path="login" view-name="login"/>-->
-
+    <mvc:view-controller path="/login" view-name="login"/>
+    <mvc:view-controller path="/register"  view-name="register"/>
 </beans>
