@@ -48,20 +48,6 @@ public class UserController {
     public String login(){
         return "login";
     }
-    /*@RequestMapping("userLogin")
-    public String userLogin(User user,Model model,HttpSession session){
-        User u=userService.login(user);
-        if(u == null){
-            model.addAttribute("error_message", "您输入的账号与密码不正确,请核实!");
-            return "login";
-        }else if(u.getUserState().equals("1")){
-            model.addAttribute("error_message", "您尚未激活,请打开您的邮箱进行激活操作!");
-            return "login";
-        }else{
-            session.setAttribute("session_user", u);  //用户信息存在session中session_user
-            return "main";
-        }
-    }*/
 
     @ResponseBody
     @RequestMapping("register")
