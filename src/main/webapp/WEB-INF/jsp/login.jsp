@@ -65,8 +65,8 @@
                      aria-label="...">
                     <div class="btn-group" role="group">
                         <button type="submit" id="loginBtn" class="btn btn-success" onclick="dologin()">
-                            <span class="glyphicon glyphicon-log-in"></span>&nbsp;登录
-                        </button>
+                        <span class="glyphicon glyphicon-log-in"></span>&nbsp;登录
+                    </button>
                     </div>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-danger" onclick="window.location = '${pageContext.request.contextPath}/register'">
