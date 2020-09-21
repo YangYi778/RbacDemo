@@ -21,4 +21,11 @@ public class ExamServiceImpl implements ExamService {
     public List<Exam> queryAllExams() {
         return examRepository.queryAllExams();
     }
+
+    @Override
+    public List<Exam> queryExams(String examName) {
+        return examRepository.queryExams(examName);
+    }
+
+
 }

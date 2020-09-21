@@ -2,22 +2,23 @@ package com.ysu.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.ysu.entity.Exam;
-import com.ysu.entity.Paper;
-import com.ysu.entity.Question;
-import com.ysu.entity.User;
+import com.ysu.entity.*;
 import com.ysu.service.ExamService;
 import com.ysu.service.PaperService;
 import com.ysu.service.QuestionService;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import sun.security.krb5.internal.PAEncTSEnc;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -98,7 +99,10 @@ public class ExamController {
     public String queryAllExams(){
         return "exam/index";
     }
-
+    @RequestMapping(value = "close")
+    public String close(){
+        return "info/close";
+    }
     /**
      * 试题管理首页——展示题库已存在的试题信息列表
      * @param pn
@@ -155,8 +159,13 @@ public class ExamController {
             System.out.println(questions);
         }
         model.addAttribute("questions", questions);
+        //String[] times = paper.getExamTime().toString().split(":");
+        //System.out.println("times === " + times);
+        //String time = times[0] + ":" + times[1];
+        //model.addAttribute("time", time);
+        //System.out.println("time========" + time);
         model.addAttribute("paper",paper);
-        System.out.println("paperTime======" + paper.getExamTime());
+        //System.out.println("paperTime======" + paper.getExamTime());
         return "exam/startExam";
     }
 
@@ -191,4 +200,54 @@ public class ExamController {
         return "exam/main";
     }
 
+    @ResponseBody
+    @RequestMapping(value="paperSubmit")
+    public Object paperSubmit(HttpServletRequest request, Model model){
+        AjaxResult ajaxResult = new AjaxResult();
+        try{
+            String paperId = request.getParameter("paperId");
+            String[] errorQue = request.getParameterValues("errorQue[]");
+            String totalScore =  request.getParameter("totalScore");
+            for(String e : errorQue){
+                System.out.println(e);
+            }
+            int[] errorQueId = StringToInt(errorQue);
+            System.out.println("***********************");
+            List<Question> errorQuestions =  questionService.queryQuestionsByIds(errorQueId);
+            for(Question err : errorQuestions){
+                System.out.println(err);
+            }
+            model.addAttribute("errorQuestions", errorQuestions);
+            model.addAttribute("paperId", paperId);
+            model.addAttribute("totalScore", totalScore);
+            ajaxResult.setSuccess(true);
+        }catch (Exception e){
+            e.printStackTrace();
+            ajaxResult.setSuccess(false);
+        }
+        return ajaxResult;
+    }
+
+    public int[] StringToInt(String[] arrs){
+        int[] ints = new int[arrs.length];
+        for(int i=0;i<arrs.length;i++){
+            ints[i] = Integer.parseInt(arrs[i]);
+        }
+        return ints;
+    }
+    @RequestMapping(value = "queryExamsByName")
+    public String queryExamsByName(String examName, Model model,@RequestParam(value="pn", defaultValue="1")Integer pn){
+        //传入当前页，以及页面的大小
+        PageHelper.startPage(pn,1);
+        System.out.println("examName====" + examName);
+        List<Exam> exams = examService.queryExams(examName);
+        for(Exam exam: exams) {
+            System.out.println(exam);
+        }
+        //pageinfo包装查询后的结果，只需要将pageinfo交给页面就行
+        //封装了分页的信息,6表示底部连续显示的页数
+        PageInfo page = new PageInfo(exams, 6);
+        model.addAttribute("pageInfo",page);
+        return "exam/index";
+    }
 }

@@ -12,4 +12,6 @@ public interface QuestionService {
     public List<Question> queryAllQuestions(String examCode, String keyword);
 
     public List<Question> queryQuestionsByPaperId(int paperId);
+
+    public List<Question> queryQuestionsByIds(int[] ids);
 }

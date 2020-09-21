@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="../../bootstrap/css/bootstrapValidator.min.css">
     <link rel="stylesheet" href="../../css/font-awesome.min.css">
     <link rel="stylesheet" href="../../css/login.css">
+    <style>
+
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -79,11 +82,11 @@
     </form>
     <hr>
 
-    <script src="../../jquery/jquery-3.5.1.min.js"></script>
-    <script src="../../bootstrap/js/bootstrap.min.js"></script>
-    <script src="../../bootstrap/js/bootstrapValidator.min.js"></script>
-    <script src="../../bootstrap/js/zh_CN.js"></script>
-    <script src="../../layer/layer.js"></script>
+    <script src="/jquery/jquery-3.5.1.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/bootstrap/js/bootstrapValidator.min.js"></script>
+    <script src="/bootstrap/js/zh_CN.js"></script>
+    <script src="/layer/layer.js"></script>
     <script>
         $('#loginform').bootstrapValidator({
             message : 'This value is not valid',

@@ -13,5 +13,7 @@ public interface ExamRepository {
 
     public List<Exam> queryAllExams();
 
+    public List<Exam> queryExams(String examName);
+
 
 }

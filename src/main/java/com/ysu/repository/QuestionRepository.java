@@ -13,4 +13,6 @@ public interface QuestionRepository {
     public List<Question> queryAllQuestions(@Param("examCode")String examCode, @Param("keyword")String keyword);
 
     public List<Question> queryQuestionsByPaperId(int paperId);
+
+    public List<Question> queryQuestionsByIds(int[] ids);
 }

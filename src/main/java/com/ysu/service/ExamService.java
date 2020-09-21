@@ -10,4 +10,6 @@ import java.util.List;
 public interface ExamService {
 
     public List<Exam> queryAllExams();
+
+    public List<Exam> queryExams(String examName);
 }

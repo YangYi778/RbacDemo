@@ -27,4 +27,9 @@ public class QuestionServiceImpl implements QuestionService {
     public List<Question> queryQuestionsByPaperId(int paperId) {
         return questionRepository.queryQuestionsByPaperId(paperId);
     }
+
+    @Override
+    public List<Question> queryQuestionsByIds(int[] ids) {
+        return questionRepository.queryQuestionsByIds(ids);
+    }
 }
