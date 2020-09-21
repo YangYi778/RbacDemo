@@ -148,7 +148,7 @@ public class UserController {
     @RequestMapping(value="index")
     public String index(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
-        PageHelper.startPage(pn,1);
+        PageHelper.startPage(pn,5);
         List<User> users = userService.queryAllUser();
         for(User user: users) {
             System.out.println(user);

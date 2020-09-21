@@ -30,6 +30,12 @@ public class PermissionController {
     private RoleService roleService;
 
 
+    @RequestMapping(value = "treetest")
+    public String treetest(){
+
+        return "permission/treetest";
+    }
+
     @RequestMapping(value="authIndex")
     public String authIndex(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
@@ -91,9 +97,7 @@ public class PermissionController {
 
         //双循环
         List<Auth> authList = new ArrayList<Auth>();
-
         List<Auth> auths = authService.queryAllAuths();
-
         for(Auth auth : auths) {
             //每一个结点都当做它的子节点
             Auth child = auth;
@@ -115,7 +119,6 @@ public class PermissionController {
         return authList;
 
     }
-
     //递归查询权限信息——效率低
     public void queryChildAuths(Auth parent) {
         List<Auth> childAuths = authService.queryChildAuths(parent.getId());
