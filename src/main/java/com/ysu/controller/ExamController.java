@@ -191,4 +191,9 @@ public class ExamController {
         return "exam/main";
     }
 
+    @RequestMapping(value = "deleteQuestion")
+    public String deleteQuestion(int id){
+        questionService.deleteQuestion(id);
+        return "";
+    }
 }

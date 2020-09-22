@@ -16,10 +16,10 @@
     <meta name="description" content="">
     <meta name="keys" content="">
     <meta name="author" content="">
-    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../bootstrap/css/bootstrapValidator.min.css">
-    <link rel="stylesheet" href="../../css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../css/login.css">
+    <link rel="stylesheet" href="${PATH}/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${PATH}/bootstrap/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="${PATH}/css/font-awesome.min.css">
+    <link rel="stylesheet" href="${PATH}/css/login.css">
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -42,7 +42,7 @@
             <div class="col-sm-4">
                 <input  class="form-control" placeholder="用户名" type="text"
                         id="userName" name="userName"
-                       data-bv-notempty="true" data-bv-notempty-message="用户名不能为空"/>
+                        data-bv-notempty="true" data-bv-notempty-message="用户名不能为空"/>
             </div>
         </div>
 
@@ -69,7 +69,7 @@
                     </button>
                     </div>
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-danger" onclick="window.location = '${pageContext.request.contextPath}/register'">
+                        <button type="button" class="btn btn-danger" onclick="window.location = '${pageContext.request.contextPath}/user/register'">
                             <span class="glyphicon glyphicon-edit"></span>注册
                         </button>
                     </div>
@@ -79,11 +79,11 @@
     </form>
     <hr>
 
-    <script src="../../jquery/jquery-3.5.1.min.js"></script>
-    <script src="../../bootstrap/js/bootstrap.min.js"></script>
-    <script src="../../bootstrap/js/bootstrapValidator.min.js"></script>
-    <script src="../../bootstrap/js/zh_CN.js"></script>
-    <script src="../../layer/layer.js"></script>
+    <script src="${PATH}/jquery/jquery-3.5.1.min.js"></script>
+    <script src="${PATH}/bootstrap/js/bootstrap.min.js"></script>
+    <script src="${PATH}/bootstrap/js/bootstrapValidator.min.js"></script>
+    <script src="${PATH}/bootstrap/js/zh_CN.js"></script>
+    <script src="${PATH}/layer/layer.js"></script>
     <script>
         $('#loginform').bootstrapValidator({
             message : 'This value is not valid',

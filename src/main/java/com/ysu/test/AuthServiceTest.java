@@ -71,12 +71,4 @@ public class AuthServiceTest {
         authService.updateAuth(auth);
     };
 
-    @Test
-    public void testdeleteAuth(){
-        AuthService authService = (AuthService) context.getBean("authService");
-        String name = "数据管理";
-        authService.deleteAuth(name);
-        name="数据清洗";
-        authService.deleteAuth(name);
-    };
 }

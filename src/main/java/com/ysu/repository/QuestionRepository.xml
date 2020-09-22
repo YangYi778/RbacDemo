@@ -19,5 +19,9 @@
 		select * from tb_question where id in (select questionId from tb_paper_question where paperId = #{paperId})
 	</select>
 
+	<delete id="deleteQuestion" parameterType="int">
+		delete from tb_question where id = #{id}
+	</delete>
+
 
 </mapper>

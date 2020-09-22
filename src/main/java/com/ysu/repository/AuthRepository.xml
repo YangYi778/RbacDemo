@@ -9,8 +9,8 @@
 		WHERE   id = #{id}
 	</update>
 
-	<delete id="deleteAuth">
-		DELETE FROM tb_auth WHERE name = #{name}
+    <delete id="deleteAuth">
+		DELETE FROM tb_auth WHERE id = #{id}
 	</delete>
 
 	<select id="queryChildAuths" parameterType="int" resultType="Auth">
@@ -24,5 +24,13 @@
 	<select id="queryAuthByUser" resultType="Auth" parameterType="User">
 		select * from tb_auth where id in(select authId from tb_role_auth where roleId in(select roleId from tb_user_role where userId=#{userId}))
 	</select>
+
+	<select id="queryAuthByName" resultType="com.ysu.entity.Auth">
+		SELECT * FROM tb_auth WHERE name=#{name}
+	</select>
+
+	<update id="updateAuthName" >
+		UPDATE  tb_auth SET name=#{name} WHERE id=#{id}
+	</update>
 
 </mapper>

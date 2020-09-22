@@ -42,9 +42,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void deleteAuth(String name) {
-        authRepository.deleteAuth(name);
+    public void deleteAuth(int id) {
+        authRepository.deleteAuth(id);
     }
 
+    @Override
+    public void updateAuthName(String name, int id) {
+        authRepository.updateAuthName(name,id);
+    }
 
+    @Override
+    public List<Auth> queryAuthByName(String name) {
+        List<Auth> auths = authRepository.queryAuthByName(name);
+        return auths;
+    }
 }

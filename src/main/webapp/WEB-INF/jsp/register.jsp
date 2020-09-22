@@ -11,10 +11,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="../../css/font-awesome.min.css">
-	<link rel="stylesheet" href="../../css/login.css">
-	<link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="../../bootstrap/css/bootstrapValidator.min.css">
+	<link rel="stylesheet" href="${PATH}/css/font-awesome.min.css">
+	<link rel="stylesheet" href="${PATH}/css/login.css">
+	<link rel="stylesheet" href="${PATH}/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="${PATH}/bootstrap/css/bootstrapValidator.min.css">
 
 
 	<title>注册页面</title>
@@ -126,11 +126,11 @@
 		<p>&copy; 版权所有，欢迎借鉴</p>
 	</footer>
 
-	<script src="../../jquery/jquery-3.5.1.min.js"></script>
-	<script src="../../bootstrap/js/bootstrap.js"></script>
-	<script src="../../bootstrap/js/bootstrapValidator.js"></script>
-	<script src="../../bootstrap/js/zh_CN.js"></script>
-	<script src="../../layer/layer.js"></script>
+	<script src="${PATH}/jquery/jquery-3.5.1.min.js"></script>
+	<script src="${PATH}/bootstrap/js/bootstrap.js"></script>
+	<script src="${PATH}/bootstrap/js/bootstrapValidator.js"></script>
+	<script src="${PATH}/bootstrap/js/zh_CN.js"></script>
+	<script src="${PATH}/layer/layer.js"></script>
 	<script>
 
         $('#registerForm').bootstrapValidator({
@@ -216,7 +216,7 @@
                 var loadingIndex = null;
                 $.ajax({
                     type: "POST",
-                    url: "${pageContext.request.contextPath}/user/register",
+                    url: "${pageContext.request.contextPath}/user/doregister",
                     data:{"userName":userName,
                         "password":password,
                         "userTrueName":userTrueName,

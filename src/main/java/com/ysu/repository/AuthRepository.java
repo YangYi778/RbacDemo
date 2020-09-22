@@ -2,6 +2,7 @@ package com.ysu.repository;
 
 import com.ysu.entity.Auth;
 import com.ysu.entity.User;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,9 +22,9 @@ public interface AuthRepository {
     public void updateAuth(Auth auth);
 
     /*
-    * 删除权限
+    * 通过id删除权限
     * */
-    public void deleteAuth(String name);
+    public void deleteAuth(int id);
 
     /*
     * 查询子权限
@@ -39,4 +40,14 @@ public interface AuthRepository {
     * 查用户权限
     * */
     public List<Auth> queryAuthByUser(User u);
+
+    /*
+     * 通过ID修改权限名
+     * */
+    public void updateAuthName(@Param("name") String name,@Param("id") int id);
+
+    /*
+    * 通过权限名来查权限
+    * */
+    public List<Auth> queryAuthByName(String name);
 }

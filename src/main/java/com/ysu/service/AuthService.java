@@ -29,5 +29,15 @@ public interface AuthService {
     /*
      * 删除权限
      * */
-    public void deleteAuth(String name);
+    public void deleteAuth(int id);
+
+    /*
+    * 通过ID修改权限名
+    * */
+    public void updateAuthName(String name,int id);
+
+    /*
+     * 通过权限名来查权限
+     * */
+    public List<Auth> queryAuthByName(String name);
 }
