@@ -16,17 +16,44 @@ import java.util.List;
 public class AuthServiceImpl implements AuthService {
     @Autowired
     private AuthRepository authRepository;
+
+
     @Override
     public List<Auth> queryChildAuths(Integer id) {
         return authRepository.queryChildAuths(id);
     }
     @Override
     public List<Auth> queryAllAuths() {
-        // TODO Auto-generated method stub
         return authRepository.queryAllAuths();
     }
     @Override
     public List<Auth> queryAuthByUser(User u) {
         return authRepository.queryAuthByUser(u);
+    }
+
+    @Override
+    public void insertAuth(Auth auth) {
+        authRepository.insertAuth(auth);
+    }
+
+    @Override
+    public void updateAuth(Auth auth) {
+        authRepository.updateAuth(auth);
+    }
+
+    @Override
+    public void deleteAuth(int id) {
+        authRepository.deleteAuth(id);
+    }
+
+    @Override
+    public void updateAuthName(String name, int id) {
+        authRepository.updateAuthName(name,id);
+    }
+
+    @Override
+    public List<Auth> queryAuthByName(String name) {
+        List<Auth> auths = authRepository.queryAuthByName(name);
+        return auths;
     }
 }

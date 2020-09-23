@@ -49,23 +49,33 @@ public class UserController {
         return "login";
     }
 
+    @RequestMapping(value = "register")
+    public String register(){
+        return "register";
+    }
+
+    /*
+    * 新登录界面
+    * */
+    @RequestMapping(value = "newlogin")
+    public String newlogin(){
+        return "newlogin";
+    }
+
     @ResponseBody
-    @RequestMapping("register")
+    @RequestMapping("doregister")
     public Object userRegister(User user,Model model, HttpServletRequest request){
         AjaxResult result = new AjaxResult();	//ajax返回的对象
         try {
             userService.saveUser(user,request);
             System.out.println("1");
-            //model.addAttribute("message", "注册成功");
             result.setSuccess(true);
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
             System.out.println("2");
-           // model.addAttribute("message", "注册失败");
             result.setSuccess(false);
         }
-        //返回视图,注册页面
         return result;
     }
 
@@ -81,13 +91,11 @@ public class UserController {
     public String active(Model model,String activeCode){
         try {
             String message= userService.active(activeCode);
-            System.out.println("3");
             model.addAttribute("message", !message.equals("") ? message: "激活成功!");
         } catch (Exception e) {
             // TODO: handle exception
-            e.printStackTrace();
-            System.out.println("4");
-            model.addAttribute("message", "激活失败!");
+
+            model.addAttribute("messagee.printStackTrace();", "激活失败!");
         }
         return "login";
 
@@ -96,7 +104,7 @@ public class UserController {
     @RequestMapping(value="/logout")
     public String logout(HttpSession session){
         //将用户信息从session中删除
-        session.removeAttribute("session_user");
+        session.removeAttribute("user");
         return "login";
     }
 
@@ -108,7 +116,7 @@ public class UserController {
         return modelAndView;
     }
 
-    //@ResponseBody
+    //登录验证
     @RequestMapping(value="/doAjaxLogin")
     public Object doAjaxLogin(User user,Model model,HttpSession session) {
         //AjaxResult result = new AjaxResult();	//ajax返回的对象
@@ -129,15 +137,14 @@ public class UserController {
                 authMap.put(auth.getId(), auth);
             }
             for(Auth auth : auths) {
-                //System.out.println("++++++++++++" + auth);
                 Auth child = auth;
                 if(child.getAuthParentRoot() == 0) {
                     root = auth;
-//                    authMap.put(child.getId(), child);
+                    authMap.put(child.getId(), child);
                 }else {
                     Auth parent = authMap.get(child.getAuthParentRoot());
-                    parent.getChildren().add(child);
-//                    authMap.put(child.getId(), child);
+                    parent.getChildren() .add(child);
+                    authMap.put(child.getId(), child);
                 }
             }
             session.setAttribute("rootAuth", root);
@@ -151,7 +158,7 @@ public class UserController {
     @RequestMapping(value="index")
     public String index(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
-        PageHelper.startPage(pn,1);
+        PageHelper.startPage(pn,5);
         List<User> users = userService.queryAllUser();
         for(User user: users) {
             System.out.println(user);
@@ -173,9 +180,7 @@ public class UserController {
     public String assign(Integer id, Model model) {
         //根据用户id查找所有
         User user = userService.queryUserById(id);
-        System.out.println("user=== " + user + "--------->>>>");
         model.addAttribute("user", user);
-
         //查询所有角色
         List<Role> roles = roleService.queryAllRole();
         //建立分配的角色与未分配的角色集合
@@ -184,7 +189,6 @@ public class UserController {
         //根据用户id获取该用户拥有的角色id，因为已经查出所有角色，所以可以只根据角色id划分已分配与未分配角色
         List<Integer> roleIds = userService.queryRoleIdsByUserId(id);
         for(Role role : roles) {
-
             if(roleIds.contains(role.getRoleId())) {
                 //当前用户已拥有的角色
                 assignedRoles.add(role);

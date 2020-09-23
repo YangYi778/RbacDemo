@@ -6,6 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page isELIgnored="false" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -15,11 +17,12 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../css/main.css">
-    <link rel="stylesheet" href="../../css/doc.min.css">
-    <link rel="stylesheet" href="../../ztree/zTreeStyle.css">
+    <link rel="stylesheet" href="../../../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../css/main.css">
+    <link rel="stylesheet" href="../../../css/doc.min.css">
+    <link rel="stylesheet" href="../../../ztree/zTreeStyle.css">
+    <link rel="stylesheet" href="../../../layer/skin/default/layer.css">
     <style>
         .tree li {
             list-style-type: none;
@@ -40,9 +43,12 @@
             </div>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
-            <div class="panel panel-default">
-                <div class="panel-heading"><i class="glyphicon glyphicon-th-list"></i> 权限菜单列表 <div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-question-sign"></i></div></div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <i class="glyphicon glyphicon-th-list"></i> 权限菜单列表
+                    <div style="float:right;cursor:pointer;"><button class="btn btn-success " onclick="addAuth()">新增</button>
+                    </div>
+                </div>
                 <div class="panel-body">
                     <ul id="treeDemo" class="ztree"></ul>
                 </div>
@@ -50,37 +56,76 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">帮助</h4>
-            </div>
-            <div class="modal-body">
-                <div class="bs-callout bs-callout-info">
-                    <h4>没有默认类</h4>
-                    <p>警告框没有默认类，只有基类和修饰类。默认的灰色警告框并没有多少意义。所以您要使用一种有意义的警告类。目前提供了成功、消息、警告或危险。</p>
-                </div>
-                <div class="bs-callout bs-callout-info">
-                    <h4>没有默认类</h4>
-                    <p>警告框没有默认类，只有基类和修饰类。默认的灰色警告框并没有多少意义。所以您要使用一种有意义的警告类。目前提供了成功、消息、警告或危险。</p>
-                </div>
-            </div>
-            <!--
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-            -->
-        </div>
-    </div>
-</div>
-<script src="../../jquery/jquery-2.1.1.min.js"></script>
-<script src="../../bootstrap/js/bootstrap.min.js"></script>
-<script src="../../script/docs.min.js"></script>
-<script src="../../ztree/jquery.ztree.all-3.5.min.js"></script>
+
+<script src="../../../jquery/jquery-2.1.1.min.js"></script>
+<script src="../../../bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../script/docs.min.js"></script>
+<script src="../../../ztree/jquery.ztree.all-3.5.min.js"></script>
+<script src="../../../layer/layer.js"></script>
 <script type="text/javascript">
+    function addAuth() {
+        layer.open({
+            type: 1 //Page层类型
+            ,area: ['450px', '520px']
+            ,title: '添加权限'
+            ,shade: 0.6 //遮罩透明度
+            ,maxmin: true //允许全屏最小化
+            ,anim: 1 //0-6的动画形式，-1不开启
+            ,content: '<form action="/permission/addAuth" method="post">\n' +
+            '                        <div style="width: 350px">\n' +
+            '                            <div class="form-group has-feedback" style="width: 320px;margin-left: 3%;margin-top: 5px">\n' +
+            '                                <p>权限名称</p>\n' +
+            '                                <input class="form-control" type="text" id="name" name="name" placeholder="请输入权限名称">\n' +
+            '                            </div>\n' +
+            '                            <div style="width: 320px;margin-left: 3%;margin-top: 5px">\n' +
+            '                                <p>选中父节点</p>\n' +
+            '                                <select id="authParentRoot" name="authParentRoot" style="width: 150px;height: 30px">\n' +
+            '                                    <c:forEach items="${auths }" var = "auth" >\n' +
+            '                                        <option value="${auth.id}">${auth.name}</option>\n' +
+            '                                    </c:forEach>\n' +
+            '                                </select>\n' +
+            '                            </div>\n' +
+            '                            <div style="width: 320px;margin-left: 3%;margin-top: 5px">\n' +
+            '                                <p>权限访问路径</p>\n' +
+            '                                <input class="form-control" type="text" id="authUrl" name="authUrl" placeholder="请输入路径名">\n' +
+            '                            </div>\n' +
+            '                            <button style="margin-left:3%;margin-top: 5%" type="button" class="btn btn-block btn-success btn-lg" onclick="doaddAuth()">添加权限节点</button>\n' +
+            '                        </div>\n' +
+            '                    </form>'
+            ,end:function () {
+                console.info("不错的")
+                location.reload();
+            }
+        });
+    }
+    function doaddAuth() {
+        var name = $("#name").val();
+        var authUrl = $("#authUrl").val();
+        var authParentRoot = $("#authParentRoot").val();
+        var loadingIndex = null;
+        $.ajax({
+            type: "post",
+            url: "${PATH}/permission/addAuth",
+            data:{
+                "name":name,
+                "authUrl":authUrl,
+                "authParentRoot":authParentRoot,
+            },
+            beforeSend:function(){
+                loadingIndex = layer.msg("添加权限中，请稍后",{icon:16});
+            },
+            success: function (result) {
+                //关闭处理loading
+                layer.close(loadingIndex);
+                //接收返回数据
+                if(result.success){
+                    layer.msg("添加成功",{timer:100,icon:6,shift:6},function(){});
+                }else{
+                    layer.msg("添加失败！",{timer:100,icon:5,shift:6},function(){});
+                }
+            }
+        });
+    }
     $(function () {
         $(".list-group-item").click(function(){
             if ( $(this).find("ul") ) {
@@ -94,76 +139,154 @@
         });
 
         var setting = {
-            view: {
-                selectedMulti: false,
-                addDiyDom: function(treeId, treeNode){
-                    var icoObj = $("#" + treeNode.tId + "_ico"); // tId = permissionTree_1, $("#permissionTree_1_ico")
-                    if ( treeNode.icon ) {
-                        icoObj.removeClass("button ico_docu ico_open").addClass("fa fa-fw " + treeNode.icon).css("background","");
-                    }
 
-                },
-                addHoverDom: function(treeId, treeNode){
-                    //   <a><span></span></a>
-                    var aObj = $("#" + treeNode.tId + "_a"); // tId = permissionTree_1, ==> $("#permissionTree_1_a")
-                    aObj.attr("href", "javascript:;");
-                    if (treeNode.editNameFlag || $("#btnGroup"+treeNode.tId).length>0) return;
-                    var s = '<span id="btnGroup'+treeNode.tId+'">';
-                    if ( treeNode.level == 0 ) {
-                        s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" href="#" >&nbsp;&nbsp;<i class="fa fa-fw fa-plus rbg "></i></a>';
-                    } else if ( treeNode.level == 1 ) {
-                        s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;"  href="#" title="修改权限信息">&nbsp;&nbsp;<i class="fa fa-fw fa-edit rbg "></i></a>';
-                        if (treeNode.children.length == 0) {
-                            s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" href="#" >&nbsp;&nbsp;<i class="fa fa-fw fa-times rbg "></i></a>';
-                        }
-                        s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" href="#" >&nbsp;&nbsp;<i class="fa fa-fw fa-plus rbg "></i></a>';
-                    } else if ( treeNode.level == 2 ) {
-                        s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;"  href="#" title="修改权限信息">&nbsp;&nbsp;<i class="fa fa-fw fa-edit rbg "></i></a>';
-                        s += '<a class="btn btn-info dropdown-toggle btn-xs" style="margin-left:10px;padding-top:0px;" href="#">&nbsp;&nbsp;<i class="fa fa-fw fa-times rbg "></i></a>';
-                    }
-
-                    s += '</span>';
-                    aObj.after(s);
-                },
-                removeHoverDom: function(treeId, treeNode){
-                    $("#btnGroup"+treeNode.tId).remove();
+            view : {
+                selectedMulti : true,
+                showLine : false
+            },
+            data : {
+                simpleData : {
+                    enable : true,
+                    idKey : "id",
+                    pIdKey : "pid",
                 }
             },
-            async: {
-                enable: true,
-                url:"tree.txt",
-                autoParam:["id", "name=n", "level=lv"]
+            edit : {
+                enable : true,
+                renameTitle : "重命名",
+                removeTitle : "删除节点以及子节点",
+                showRemoveBtn : setRemoveBtn,
+                showRenameBtn : setRenameBtn
             },
-            callback: {
-                onClick : function(event, treeId, json) {
-
-                }
+            callback : {
+                // 单击事件
+                onCheck : zTreeOnCheck,
+                beforeRemove : zTreeBeforeRemove,
+                onRename : zTreeOnRename
             }
         };
-        //$.fn.zTree.init($("#treeDemo"), setting); //异步访问数据
+        $(document).ready(function() {
+            initZTree();
+        });
 
-        var d = [{
-            "id":1,
-            "pid":0,
-            "seqno":0,
-            "name":"系统权限菜单",
-            "url":null,
-            "icon":"fa fa-sitemap",
-            "open":true,
-            "checked":false,
-            "children":
-            [{"id":2,
-            "pid":1,
-            "seqno":0,
-            "name":"控制面板",
-            "url":"dashboard.htm",
-            "icon":"fa fa-desktop",
-            "open":true,
-            "checked":false,
-            "children":[]},
-            {"id":6,
-                "pid":1,"seqno":1,"name":"消息管理","url":"message/index.htm","icon":"fa fa-weixin","open":true,"checked":false,"children":[]},{"id":7,"pid":1,"seqno":1,"name":"权限管理","url":"","icon":"fa fa-cogs","open":true,"checked":false,"children":[{"id":8,"pid":7,"seqno":1,"name":"用户管理","url":"user/index.htm","icon":"fa fa-user","open":true,"checked":false,"children":[]},{"id":9,"pid":7,"seqno":1,"name":"角色管理","url":"role/index.htm","icon":"fa fa-graduation-cap","open":true,"checked":false,"children":[]},{"id":10,"pid":7,"seqno":1,"name":"许可管理","url":"permission/index.htm","icon":"fa fa-check-square-o","open":true,"checked":false,"children":[]}]},{"id":11,"pid":1,"seqno":1,"name":"资质管理","url":"","icon":"fa fa-certificate","open":true,"checked":false,"children":[{"id":12,"pid":11,"seqno":1,"name":"分类管理","url":"cert/type.htm","icon":"fa fa-th-list","open":true,"checked":false,"children":[]},{"id":13,"pid":11,"seqno":1,"name":"资质管理","url":"cert/index.htm","icon":"fa fa-certificate","open":true,"checked":false,"children":[]}]},{"id":15,"pid":1,"seqno":1,"name":"流程管理","url":"process/index.htm","icon":"fa fa-random","open":true,"checked":false,"children":[]},{"id":16,"pid":1,"seqno":1,"name":"审核管理","url":"","icon":"fa fa-check-square","open":true,"checked":false,"children":[{"id":17,"pid":16,"seqno":1,"name":"实名认证人工审核","url":"process/cert.htm","icon":"fa fa-check-circle-o","open":true,"checked":false,"children":[]}]}]}];
-        $.fn.zTree.init($("#treeDemo"), setting, d);
+        //ids是一个数组 返回结果数组     treeNode是选中的节点
+        function getChildren(ids,treeNode){
+            ids.push(treeNode.id);
+            if (treeNode.isParent){
+                for(var obj in treeNode.children){
+                    getChildren(ids,treeNode.children[obj]);
+                }
+            }
+            console.log("ids:"+ids);
+            return ids;
+        }
+
+        //设置删除按钮
+        function setRemoveBtn(treeId, treeNode) {
+            if(treeNode.id == 1){
+                return false;
+            }
+            return true;
+        }
+
+        //设置重命名按钮
+        function setRenameBtn(treeId, treeNode) {
+            if(treeNode.id == 1){
+                return false;
+            }
+            return true;
+        }
+
+        //删除节点之前
+        function zTreeBeforeRemove(treeId, treeNode){
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            zTree.selectNode(treeNode);
+            if(treeNode.id==1){
+                layer.open({
+                    content : "请勿删除顶级指标！",
+                    btn : [ "确定" ],
+                    shadeClose : false,
+                    yes : function(index) {
+                        layer.close(index);
+                    }
+                }); return false;
+            }
+            var flag=false;//此处必须定义一个变量，不然还没确定就把节点从树上删除
+            layer.confirm("确认要删除当前指标及其下级指标吗？", {
+                    btn: ['确定','取消']
+                },
+                function(){
+                    var ids=[];
+                    ids=getChildren(ids,treeNode);//获取当前节点的子节点字符串数组
+                    $.ajax({
+                        type : "POST",
+                        url : "${pageContext.request.contextPath}/permission/deleteAuth",
+                        data: {"ids":ids},//格式化参数
+                        success : function(result){
+                            if(result.success){
+                                console.log("成功了吗"+result.success);
+                                layer.open({
+                                    content : "删除成功！",
+                                    btn : [ "确定" ],
+                                    shadeClose : false,
+                                    yes : function(index) {
+                                        layer.close(index);
+                                        location.reload();
+                                        zTree.removeChildNodes(treeNode);//删除当前节点子节点
+                                        zTree.removeNode(treeNode);//删除当前节点
+                                    }
+                                });
+                            }
+                        }
+                    });
+                },
+                function(index){
+                    layer.close(index);
+                    flag=false;
+                })
+            return flag;
+        }
+        //在后台执行重命名操作
+        function zTreeOnRename(event, treeId, treeNode) {
+            $.ajax({
+                url : "${PATH}/permission/updateAuthName",
+                data : {
+                    id : treeNode.id,
+                    name : treeNode.name
+                },
+                type : "POST",
+                success : function(data) {
+                    location.reload()
+                }
+            });
+        }
+        // 节点勾选事件
+        function zTreeOnCheck(event, treeId, treeNode) {
+            // 显示围栏
+            if (beforeNodeID != treeNode.id) {
+                electronicLayerOff = true;
+                beforeNodeID = treeNode.id;
+            }
+            showDetain([ treeNode.id ]);
+        }
+        return {
+            init : function() {
+                initTree();
+            }
+        };
+
+        function initZTree() {
+            $.ajax({
+                url : "${path}/permission/loadData",
+                type : "post",
+                dataType : "json",
+                success : function(data) {
+                    $.fn.zTree.init($("#treeDemo"), setting, data);
+                },
+                error : function() {
+                }
+            });
+        }
     });
 </script>
 </body>

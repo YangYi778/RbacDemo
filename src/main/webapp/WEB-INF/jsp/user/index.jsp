@@ -11,9 +11,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="${path}/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${path}/css/font-awesome.min.css">
+    <link rel="stylesheet" href="${path}/css/main.css">
     <style>
         .tree li {
             list-style-type: none;
@@ -117,9 +117,15 @@
     </div>
 </div>
 
+<<<<<<< HEAD
 <script src="../../jquery/jquery-2.1.1.min.js"></script>
 <script src="../../bootstrap/js/bootstrap.min.js"></script>
 <script src="../../script/docs.min.js"></script>
+=======
+<script src="${path}/jquery/jquery-2.1.1.min.js"></script>
+<script src="${path}/bootstrap/js/bootstrap.min.js"></script>
+<script src="${path}/script/docs.min.js"></script>
+>>>>>>> HQT-002
 <script type="text/javascript">
     $(function () {
         $(".list-group-item").click(function(){
