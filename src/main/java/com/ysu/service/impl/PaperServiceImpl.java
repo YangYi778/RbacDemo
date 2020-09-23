@@ -23,6 +23,11 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
+    public List<Paper> queryAllPapersAdmin() {
+        return paperRepository.queryAllPapersAdmin();
+    }
+
+    @Override
     public Paper queryPaperById(int id) {
         return paperRepository.queryPaperById(id);
     }
@@ -55,5 +60,20 @@ public class PaperServiceImpl implements PaperService {
     @Override
     public void insertQuestionsToPaper(Map<String, Object> map) {
         paperRepository.insertQuestionsToPaper(map);
+    }
+
+    @Override
+    public void updatePaper(Paper paper) {
+        paperRepository.updatePaperById(paper);
+    }
+
+    @Override
+    public void deletePaperById(Integer id) {
+        paperRepository.deletePaperById(id);
+    }
+
+    @Override
+    public void releasePaperById(Integer id) {
+        paperRepository.releasePaperById(id);
     }
 }

@@ -4,6 +4,9 @@
 
 
 	<select id="queryAllPapers" resultType="Paper">
+		select * from tb_paper where paperStatus = 1
+	</select>
+	<select id="queryAllPapersAdmin" resultType="Paper">
 		select * from tb_paper
 	</select>
 
@@ -48,5 +51,17 @@
 			( #{paperId}, #{queId} )
 		</foreach>
 	</insert>
+
+	<update id="updatePaperById" parameterType="Paper">
+		update tb_paper set paperName = #{paperName}, paperType=#{paperType}, paperDegree=#{paperDegree}, singleQueNum=#{singleQueNum}, paperScore=#{paperScore}, examTime=#{examTime} where id = #{id}
+	</update>
+
+	<delete id="deletePaperById">
+		delete from tb_paper where id = #{id}
+	</delete>
+
+	<update id="releasePaperById">
+		update tb_paper set paperStatus = 1 where id = #{id}
+	</update>
 
 </mapper>

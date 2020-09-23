@@ -12,6 +12,8 @@ public interface PaperService {
 
     public List<Paper> queryAllPapers();
 
+    public List<Paper> queryAllPapersAdmin();
+
     public Paper queryPaperById(int id);
 
     public List<Paper> queryPapersByExamId(int examId);
@@ -26,4 +28,9 @@ public interface PaperService {
 
     public void insertQuestionsToPaper(Map<String,Object> map);
 
+    public void updatePaper(Paper paper);
+
+    public void deletePaperById(Integer id);
+
+    public void releasePaperById(Integer id);
 }
