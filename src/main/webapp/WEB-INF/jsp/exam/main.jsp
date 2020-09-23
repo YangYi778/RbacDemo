@@ -76,8 +76,8 @@
                             <tr >
                                 <th width="30">#</th>
                                 <th width="30"><input type="checkbox"></th>
-                                <th>科目代码</th>
                                 <th>考试名称</th>
+                                <th>科目代码</th>
                                 <th>考试难度</th>
                                 <th>考试分数</th>
                                 <th>考试时长</th>
@@ -104,22 +104,22 @@
                             <tr >
                                 <td colspan="6" align="center">
                                     <ul class="pagination">
-                                        <li><a href="index?pn=1">首页</a></li>
+                                        <li><a href="main?pn=1">首页</a></li>
                                         <c:if test="${pageInfo.hasPreviousPage }">
-                                            <li><a href="index?pn=${pageInfo.pageNum-1 }" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                                            <li><a href="main?pn=${pageInfo.pageNum-1 }" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
                                         </c:if>
                                         <c:forEach items="${pageInfo.navigatepageNums }" var="page_Num">
                                             <c:if test="${page_Num == pageInfo.pageNum }">
                                                 <li class="active"><a href="#">${page_Num }</a></li>
                                             </c:if>
                                             <c:if test="${page_Num != pageInfo.pageNum }">
-                                                <li><a href="index?pn=${page_Num }">${page_Num }</a></li>
+                                                <li><a href="main?pn=${page_Num }">${page_Num }</a></li>
                                             </c:if>
                                         </c:forEach>
                                         <c:if test="${pageInfo.hasNextPage }">
-                                            <li><a href="index?pn=${pageInfo.pageNum+1 }" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                                            <li><a href="main?pn=${pageInfo.pageNum+1 }" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
                                         </c:if>
-                                        <li><a href="index?pn=${pageInfo.pages }">尾页</a></li>
+                                        <li><a href="main?pn=${pageInfo.pages }">尾页</a></li>
                                     </ul>
                                 </td>
                             </tr>

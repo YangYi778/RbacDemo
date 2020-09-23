@@ -60,9 +60,9 @@
                             <tr >
                                 <th width="30">#</th>
                                 <th width="30"><input type="checkbox"></th>
-                                <th>考试代码</th>
-                                <th>考试名称</th>
-                                <th>考试说明</th>
+                                <th>科目代码</th>
+                                <th>科目名称</th>
+                                <th>科目说明</th>
                                 <th width="100">操作</th>
                             </tr>
                             </thead>
