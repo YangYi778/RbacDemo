@@ -38,6 +38,8 @@
             <mvc:mapping path="/**"></mvc:mapping>
             <mvc:exclude-mapping path="/login"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/*/register"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/*/active"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/*/doregister"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/*/doAjaxLogin"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/*/vaildationLongName"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/**/bootsrap/**"></mvc:exclude-mapping>
