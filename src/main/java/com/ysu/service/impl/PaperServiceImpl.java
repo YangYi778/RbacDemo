@@ -35,4 +35,19 @@ public class PaperServiceImpl implements PaperService {
     public List<Paper> queryPapersByConditions(String paperName, Integer paperType) {
         return paperRepository.queryPapersByConditions(paperName,paperType);
     }
+
+    @Override
+    public List<Paper> queryPapersByUserId(int userId) {
+        return paperRepository.queryPapersByUserId(userId);
+    }
+
+    @Override
+    public void insertExamRecord(int paperId, int userId, int userScore) {
+        paperRepository.insertExamRecord(paperId,userId,userScore);
+    }
+
+    @Override
+    public void insertPaper(Paper paper) {
+        paperRepository.insertPaper(paper);
+    }
 }

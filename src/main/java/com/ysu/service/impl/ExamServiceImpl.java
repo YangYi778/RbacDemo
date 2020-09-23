@@ -27,5 +27,25 @@ public class ExamServiceImpl implements ExamService {
         return examRepository.queryExams(examName);
     }
 
+    @Override
+    public void updateExam(Exam exam) {
+        examRepository.updateExam(exam);
+    }
+
+    @Override
+    public Exam queryExamById(Integer id) {
+        return examRepository.queryExamById(id);
+    }
+
+    @Override
+    public void insertExam(Exam exam) {
+        examRepository.insertExam(exam);
+    }
+
+    @Override
+    public void deleteExam(Integer id) {
+        examRepository.deleteExam(id);
+    }
+
 
 }

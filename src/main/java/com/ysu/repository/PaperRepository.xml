@@ -25,5 +25,18 @@
 		</where>
 	</select>
 
+	<select id="queryPapersByUserId" resultType="Paper">
+		select tb_paper.*, tb_user_paper.userScore from tb_paper,tb_user_paper
+		where tb_paper.id in (select paperId userScore from tb_user_paper where userId = #{userId})
+	</select>
+
+
+	<insert id="insertExamRecord" parameterType="int">
+		insert into tb_user_paper(paperId, userId, userScore) values(#{param1},${param2},#{param3})
+	</insert>
+
+	<insert id="insertPaper" parameterType="Paper">
+		insert into tb_paper(paperName, paperType, paperDegree, singleQueNum, examTime, createDate) values(#{paperName}, #{paperType}, #{paperDegree}, #{singleQueNum}, #{examTime}, #{createDate})
+	</insert>
 
 </mapper>

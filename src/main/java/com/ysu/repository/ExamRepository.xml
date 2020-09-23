@@ -11,4 +11,19 @@
 		select * from tb_exam where examName like '%' #{examName} '%'
 	</select>
 
+	<update id="updateExam" parameterType="Exam">
+		update tb_exam set examName = #{examName}, examInfo = #{examInfo} where id = #{id}
+	</update>
+
+	<insert id="insertExam" parameterType="Exam">
+		insert tb_exam(id,examName,examInfo) values(#{id},#{examName},#{examInfo})
+	</insert>
+
+	<select id="queryExamById" resultType="Exam">
+		select * from tb_exam where id = #{id};
+	</select>
+
+	<delete id="deleteExam" parameterType="integer">
+		delete from tb_exam where id = #{id}
+	</delete>
 </mapper>

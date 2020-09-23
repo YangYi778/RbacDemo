@@ -125,16 +125,19 @@ public class UserController {
             Auth root = null;
             List<Auth> auths = authService.queryAuthByUser(u);	//传入用户id
             Map<Integer,Auth> authMap = new HashMap<Integer, Auth>();
+            for(Auth auth : auths){
+                authMap.put(auth.getId(), auth);
+            }
             for(Auth auth : auths) {
                 //System.out.println("++++++++++++" + auth);
                 Auth child = auth;
                 if(child.getAuthParentRoot() == 0) {
                     root = auth;
-                    authMap.put(child.getId(), child);
+//                    authMap.put(child.getId(), child);
                 }else {
                     Auth parent = authMap.get(child.getAuthParentRoot());
                     parent.getChildren().add(child);
-                    authMap.put(child.getId(), child);
+//                    authMap.put(child.getId(), child);
                 }
             }
             session.setAttribute("rootAuth", root);

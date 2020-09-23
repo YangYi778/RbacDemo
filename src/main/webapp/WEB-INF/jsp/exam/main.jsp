@@ -48,6 +48,7 @@
                 </div>
                 <div class="panel-body">
                     <form action="/exam/queryExam" method="post" class="form-inline" role="form" style="float:left;">
+                        <input type="hidden" name="originPage" id = "originPage" value="main" />
                         <div class="form-group has-feedback">
                             <div class="input-group">
                                 <div class="input-group-addon">考试名称</div>
@@ -65,14 +66,6 @@
                                 </select>
                             </div>
                         </div>
-<%--                        <div class="form-group">--%>
-<%--                            <label for="examType">考试科目</label>--%>
-<%--                            <select id="examType" name="examType" style="width:150px; height:30px;">--%>
-<%--                                <c:forEach items="${exams}" var="exam">--%>
-<%--                                    <option value="${exam.id}">${exam.examName}</option>--%>
-<%--                                </c:forEach>--%>
-<%--                            </select>--%>
-<%--                        </div>--%>
                         <button type="submit" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
                     <br>

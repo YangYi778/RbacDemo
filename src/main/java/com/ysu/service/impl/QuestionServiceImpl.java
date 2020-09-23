@@ -19,7 +19,7 @@ public class QuestionServiceImpl implements QuestionService {
 
 
     @Override
-    public List<Question> queryAllQuestions(String examCode, String keyword) {
+    public List<Question> queryAllQuestions(Integer examCode, String keyword) {
         return questionRepository.queryAllQuestions(examCode,keyword);
     }
 
@@ -31,5 +31,20 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Question> queryQuestionsByIds(int[] ids) {
         return questionRepository.queryQuestionsByIds(ids);
+    }
+
+    @Override
+    public void insertQuestion(Question question) {
+        questionRepository.insertQuestion(question);
+    }
+
+    @Override
+    public void updateQuestion(Question question) {
+        questionRepository.updateQuestion(question);
+    }
+
+    @Override
+    public void deleteQuestion(Integer id) {
+        questionRepository.deleteQuestion(id);
     }
 }

@@ -18,10 +18,13 @@ public class Paper {
     private Integer paperType;
     private String paperDegree;
     private int paperScore;
+    private int singleQueNum;
     private Time examTime;
     private Date createDate;
     private int paperStatus;
     private int userId;
+
+    private int userScore;
 
     private List<Question> questions = new ArrayList<>();
 }

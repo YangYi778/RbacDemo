@@ -10,7 +10,7 @@
 				examCode = #{examCode}
 			</if>
 			<if test="keyword != null">
-				and qustionName like '%' #{keyword} '%'
+				and queInfo like '%' #{keyword} '%'
 			</if>
 		</where>
 	</select>
@@ -25,5 +25,17 @@
 		select * from tb_question where id in (select questionId from tb_paper_question where paperId = #{paperId})
 	</select>
 
+	<insert id="insertQuestion" parameterType="Question">
+		insert into tb_question(queInfo,queType,queScore,optA,optB,optC,optD,answer,examCode,createDate) values
+		(#{queInfo},#{queType}, #{queScore},#{optA},#{optB},#{optC},#{optD},#{answer},#{examCode},#{createDate})
+	</insert>
+
+	<update id="updateQuestion" parameterType="Question">
+		update tb_question set queInfo = #{queInfo},queType=#{queType},queScore=#{queScore},optA=#{optA},optB=#{optB},optC=#{optC},optD=#{optD},answer=#{answer},examCode=#{examCode} where id = #{id}
+	</update>
+
+	<delete id="deleteQuestion" parameterType="integer">
+		delete from tb_question where id = #{id}
+	</delete>
 
 </mapper>

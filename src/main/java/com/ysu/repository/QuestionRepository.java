@@ -10,9 +10,15 @@ import java.util.List;
  */
 public interface QuestionRepository {
 
-    public List<Question> queryAllQuestions(@Param("examCode")String examCode, @Param("keyword")String keyword);
+    public List<Question> queryAllQuestions(@Param("examCode")Integer examCode, @Param("keyword")String keyword);
 
     public List<Question> queryQuestionsByPaperId(int paperId);
 
     public List<Question> queryQuestionsByIds(int[] ids);
+
+    public void insertQuestion(Question question);
+
+    public void updateQuestion(Question question);
+
+    public void deleteQuestion(Integer id);
 }

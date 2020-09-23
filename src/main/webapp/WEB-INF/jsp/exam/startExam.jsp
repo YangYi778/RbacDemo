@@ -55,7 +55,7 @@
                 <form action="" method="post">
                     <div class="test_title">
                         <p class="test_time">
-                            <i class="icon iconfont">&#xe6fb;</i><b class="alt-1">01:40</b>
+                            <i class="icon iconfont">&#xe6fb;</i><b class="alt-1">${paper.examTime}</b>
                         </p>
                         <font><input type="button" name="test_jiaojuan" onclick="paperSubmit()" value="交卷"></font>
                     </div>
@@ -127,7 +127,7 @@
                             <i class="icon iconfont">&#xe692;</i>答题卡
                         </h1>
                         <p class="test_time">
-                            <i class="icon iconfont">&#xe6fb;</i><b class="alt-1">01:40</b>
+                            <i class="icon iconfont">&#xe6fb;</i><b class="alt-1">${paper.examTime}</b>
                         </p>
                     </div>
 
@@ -261,7 +261,7 @@
             success : function (result) {
                 if(result.success){
                     layer.msg("交卷成功！",{timer:1500,icon:1,shift:3},function () {});
-                    location.href = "${PATH}/exam/close";
+                    location.href = "${PATH}/exam/close?paperId=${paper.id}&userId=${user.userId}&userScore="+totalScore;
                 }else{
                     layer.msg("网络异常，请稍后重试！",{timer:1500,icon:0,shift:3},function () {});
                 }

@@ -9,7 +9,7 @@ import java.util.Date;
  */
 @Data
 public class Question {
-    private int id;
+    private Integer id;
     private String queInfo;
     private String queType;
     private int queScore;

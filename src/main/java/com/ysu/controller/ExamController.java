@@ -6,7 +6,10 @@ import com.ysu.entity.*;
 import com.ysu.service.ExamService;
 import com.ysu.service.PaperService;
 import com.ysu.service.QuestionService;
-import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,12 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import sun.security.krb5.internal.PAEncTSEnc;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import java.beans.PropertyEditorSupport;
+import java.io.InputStream;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by 万恶de亚撒西 on 2020/9/16.
@@ -59,6 +67,18 @@ public class ExamController {
         return "exam/main";
     }
 
+    @RequestMapping(value = "deleteExam")
+    public boolean deleteExam(@RequestParam("id") Integer id){
+        System.out.println("&&&&&&&&&&&&&&&");
+        System.out.println("id_+_+_+_" + id);
+        try {
+            examService.deleteExam(id);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
     /**
      * 考试科目管理首页——展示当前已存在的考试科目信息
      * @param pn
@@ -86,9 +106,14 @@ public class ExamController {
      * @return
      */
     @RequestMapping(value = "updateExam")
-    public String updateExam(int id){
-        //修改考试科目信息
-        return "exam/index";
+    public String updateExam(Exam exam){
+        Exam result = examService.queryExamById(exam.getId());
+        if(result != null){
+            examService.updateExam(exam);
+        }else{
+            examService.insertExam(exam);
+        }
+        return "redirect:/exam/index";
     }
 
     /**
@@ -99,10 +124,7 @@ public class ExamController {
     public String queryAllExams(){
         return "exam/index";
     }
-    @RequestMapping(value = "close")
-    public String close(){
-        return "info/close";
-    }
+
     /**
      * 试题管理首页——展示题库已存在的试题信息列表
      * @param pn
@@ -110,9 +132,18 @@ public class ExamController {
      * @return
      */
     @RequestMapping(value = "question")
-    public String question(String examCode, String keyword,@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
+    public String question(HttpServletRequest request,@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
         PageHelper.startPage(pn,2);
+        String eCode = request.getParameter("examCode");
+        String keyword = request.getParameter("keyword");
+        List<Exam> exams = examService.queryAllExams();
+        model.addAttribute("exams",exams);
+
+        Integer examCode = null;
+        if(eCode != "" && eCode != null){
+            examCode = Integer.parseInt(eCode);
+        }
         List<Question> questions = questionService.queryAllQuestions(examCode,keyword);
         for(Question question: questions) {
             System.out.println(question);
@@ -124,15 +155,44 @@ public class ExamController {
         return "exam/question";
     }
 
+    @RequestMapping(value = "updateQuestion")
+    public String updateQuestion(Question question){
+        System.out.println("*****************");
+        System.out.println("id" + question.getId());
+        if(question.getId() != null){
+            System.out.println("更新**********");
+            questionService.updateQuestion(question);
+        }else{
+            System.out.println("插入******************----");
+            question.setCreateDate(new Date());
+            questionService.insertQuestion(question);
+        }
+        return "redirect:/exam/question";
+    }
+    @ResponseBody
+    @RequestMapping(value = "deleteQuestion")
+    public boolean deleteQuestion(@RequestParam("id") Integer id){
+        System.out.println("&&&&&&&&&&&&&&&");
+        System.out.println("id_+_+_+_" + id);
+        try {
+            questionService.deleteQuestion(id);
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     /**
      * 自动生成试卷：随机从题库抽取一定数量和一定难度（可交由用户设置，也可固定试卷难度为ABC三档，A档试卷困难题大于0.8的占比20%，中档题大于0.4的占比50%，BC档以此类推）的题目并生成试卷（要求设计页面或弹出框来设置试卷属性）
      * 手动生成试卷：要求试题管理页面按考试科目显示试题列表，通过复选框或其他方式批量添加试题到试卷
      */
     @RequestMapping(value = "paper")
-    public String paper(String examCode, String keyword,@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
+    public String paper(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
         PageHelper.startPage(pn,1);
         List<Paper> papers = paperService.queryAllPapers();
+        List<Exam> exams = examService.queryAllExams();
         for(Paper paper: papers) {
             System.out.println(paper);
         }
@@ -140,6 +200,7 @@ public class ExamController {
         //封装了分页的信息,6表示底部连续显示的页数
         PageInfo page = new PageInfo(papers, 6);
         model.addAttribute("pageInfo",page);
+        model.addAttribute("exams",exams);
         return "exam/paper";
     }
 
@@ -174,13 +235,15 @@ public class ExamController {
       @param examId
       @param pn
       @param model
-      @return*/
+      @return
+      */
     @RequestMapping(value = "queryExam")
     public String queryExam(HttpServletRequest request, @RequestParam(value="pn", defaultValue="1")Integer pn, Model model){
         String paperName = request.getParameter("paperName");
         String pType = request.getParameter("paperType");
+        String originPage = request.getParameter("originPage");
         Integer paperType = null;
-        if(pType != ""){
+        if(pType != "" && pType != null){
             paperType = Integer.parseInt(pType);
         }
         System.out.println("paperName ==="+ paperName +"*******paperType ====" + paperType);
@@ -197,8 +260,15 @@ public class ExamController {
         model.addAttribute("exams",exams);
         PageInfo page = new PageInfo(papers, 6);
         model.addAttribute("pageInfo",page);
-        return "exam/main";
+        if(originPage.equals("main")){
+            return "exam/main";
+        }else if(originPage.equals("paper")){
+            return "exam/paper";
+        }else{
+            return "info/error";
+        }
     }
+
 
     @ResponseBody
     @RequestMapping(value="paperSubmit")
@@ -208,16 +278,18 @@ public class ExamController {
             String paperId = request.getParameter("paperId");
             String[] errorQue = request.getParameterValues("errorQue[]");
             String totalScore =  request.getParameter("totalScore");
-            for(String e : errorQue){
-                System.out.println(e);
+            if(errorQue != null){
+                for(String e : errorQue){
+                    System.out.println(e);
+                }
+                int[] errorQueId = StringToInt(errorQue);
+                System.out.println("***********************");
+                List<Question> errorQuestions =  questionService.queryQuestionsByIds(errorQueId);
+                for(Question err : errorQuestions){
+                    System.out.println(err);
+                }
+                model.addAttribute("errorQuestions", errorQuestions);
             }
-            int[] errorQueId = StringToInt(errorQue);
-            System.out.println("***********************");
-            List<Question> errorQuestions =  questionService.queryQuestionsByIds(errorQueId);
-            for(Question err : errorQuestions){
-                System.out.println(err);
-            }
-            model.addAttribute("errorQuestions", errorQuestions);
             model.addAttribute("paperId", paperId);
             model.addAttribute("totalScore", totalScore);
             ajaxResult.setSuccess(true);
@@ -250,4 +322,128 @@ public class ExamController {
         model.addAttribute("pageInfo",page);
         return "exam/index";
     }
+
+    /**
+     * 将考试信息插入到数据库中并跳转到考试中心
+     * @return
+     */
+    @RequestMapping(value = "close")
+    public String close(int paperId, int userId, int userScore, Model model){
+        System.out.println("****************");
+        System.out.println("paperId====" + paperId);
+        System.out.println("userId====" + userId);
+        System.out.println("userScore====" + userScore);
+        System.out.println("****************");
+        //将考试记录插入到数据库中
+        paperService.insertExamRecord(paperId,userId,userScore);
+        model.addAttribute("userId",userId);
+        return "info/close";
+    }
+
+
+    /**
+     * 根据用户id查询考试记录并显示
+     * @param userId
+     * @param model
+     * @param pn
+     * @return
+     */
+    @RequestMapping(value = "examRecord")
+    public String examRecord(HttpServletRequest request,Model model,@RequestParam(value="pn", defaultValue="1")Integer pn){
+        User user = (User)request.getSession().getAttribute("user");
+        int userId = user.getUserId();
+        System.out.println("*********************");
+        System.out.println("userId******=====" + userId);
+        System.out.println("*********************");
+        //传入当前页，以及页面的大小
+        PageHelper.startPage(pn,1);
+        //根据用户id查询考试记录
+        List<Paper> papers = paperService.queryPapersByUserId(userId);
+        for(Paper paper : papers){
+            System.out.println(paper);
+        }
+        System.out.println("*********************");
+
+        PageInfo page = new PageInfo(papers, 6);
+        model.addAttribute("pageInfo",page);
+        return "/exam/examRecord";
+    }
+    @RequestMapping(value = "addPaper")
+    public String addPaper(HttpServletRequest request){
+        String paperName = request.getParameter("paperName");
+        String paperType = request.getParameter("paperType");
+        String singleQuestion = request.getParameter("singleQuestion");
+        String paperDegree = request.getParameter("paperDegree");
+        String examTime = request.getParameter("examTime");
+        Paper paper = new Paper();
+        paper.setPaperName(paperName);
+        paper.setPaperType(Integer.parseInt(paperType));
+        paper.setSingleQueNum(Integer.parseInt(singleQuestion));
+        paper.setPaperDegree(paperDegree);
+        paper.setExamTime(strToTime(examTime));
+        paper.setCreateDate(new Date());
+        paperService.insertPaper(paper);
+
+        return "exam/paper";
+    }
+    /**返回java.sql.Time格式
+     * @param
+     *
+     * */
+    public static Time strToTime(String strDate) {
+        String str = strDate;
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        java.util.Date d = null;
+        try {
+            d = format.parse(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        java.sql.Time time = new java.sql.Time(d.getTime());
+        return time.valueOf(str);
+    }
+
+    //上传文件
+    //@ResponseBody
+    @RequestMapping(value = "fileUpload")
+    public Object fileUpload(@RequestParam("file") MultipartFile file,
+                             HttpServletRequest request, HttpServletResponse response){
+        AjaxResult result = new AjaxResult();
+        try{
+            // @RequestParam("file") MultipartFile file 是用来接收前端传递过来的文件
+            // 1.创建workbook对象，读取整个文档
+            InputStream inputStream = file.getInputStream();
+            POIFSFileSystem poifsFileSystem = new POIFSFileSystem(inputStream);
+            HSSFWorkbook wb = new HSSFWorkbook(poifsFileSystem);
+            // 2.读取页脚sheet
+            HSSFSheet sheetAt = wb.getSheetAt(0);
+            //3.循环读取某一行
+            for (Row row : sheetAt){
+                //4.读取每一行的单元格
+                String stringCellValue = row.getCell(0).getStringCellValue();//第一列数据
+                String stringCellValue2 = row.getCell(1).getStringCellValue();//第二列数据
+                System.out.println("**************");
+                System.out.println(stringCellValue);
+                System.out.println("**************");
+            }
+            result.setSuccess(true);
+        }catch (Exception e){
+            e.printStackTrace();
+            result.setSuccess(false);
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "uploadFile")
+    @ResponseBody
+    public Map<String,String> uploadFile(MultipartFile excelFile){
+        Map<String, String> ret = new HashMap<String, String >();
+        if(excelFile == null){
+            ret.put("type", "error");
+            ret.put("msg", "请选择文件!");
+            return ret;
+        }
+        return ret;
+    }
+
 }

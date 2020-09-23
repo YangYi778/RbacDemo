@@ -50,8 +50,8 @@
                         </div>
                         <button type="submit" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
-                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
-                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
+                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;" onclick="deleteExam() "><i class=" glyphicon glyphicon-remove"></i> 删除</button>
+                    <button type="button" class="btn btn-primary" style="float:right;" onclick="addExam()"><i class="glyphicon glyphicon-plus"></i> 新增</button>
                     <br>
                     <hr style="clear:both;">
                     <div class="table-responsive">
@@ -76,8 +76,8 @@
                                     <td>${exam.examInfo }</td>
                                     <td>
 <%--                                        <button type="button" id="assignRole" onclick="assignRole(${user.userId })" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>--%>
-                                        <button type="button" id="updateExam" onclick="updateExam(${exam.id })" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
-                                        <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
+                                        <button type="button" id="updateExam" onclick="updateExam(${exam.id },'${exam.examName}','${exam.examInfo}')" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
+                                        <button type="button" onclick="deleteExam(${exam.id})" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -115,9 +115,14 @@
     </div>
 </div>
 
+
+</body>
+
+
 <script src="../../jquery/jquery-2.1.1.min.js"></script>
 <script src="../../bootstrap/js/bootstrap.min.js"></script>
 <script src="../../script/docs.min.js"></script>
+<script src="/layer/layer.js"></script>
 <script type="text/javascript">
     $(function () {
         $(".list-group-item").click(function(){
@@ -131,16 +136,71 @@
             }
         });
     });
+    function addExam() {
+        layer.open({
+            type: 1,
+            title: '新增科目界面',
+            skin: 'layui-layer-rim', //加上边框
+            area: ['400px', '340px'], //宽高
+            content: '<form id="updateExam" action="/exam/updateExam" method="post">\n' +
+                '    <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
+                '        <label>科目代码</label><input id=\'id\' class=\'form-control\' type=\'text\' name=\'id\'/>\n' +
+                '    </div>\n' +
+                '    <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
+                '        <label>科目名称</label><input id=\'examName\' class=\'form-control\' type=\'text\' name=\'examName\'/>\n' +
+                '    </div>\n' +
+                '    <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
+                '        <label>科目备注</label><input id=\'examInfo\' class=\'form-control\' type=\'text\' name=\'examInfo\'/>\n' +
+                '    </div>\n' +
+                '    <button type="submit" class="btn btn-block btn-success btn-lg" style="width: 320px;margin-left: 3%;">确认添加</button>\n' +
+                '</form>'
+        });
+    }
     /* $("tbody .btn-success").click(function(){
         window.location.href = "assignRole.html";
     });
     $("tbody .btn-primary").click(function(){
         window.location.href = "edit.html";
     }); */
-    function updateExam(id){
+    function deleteExam(id) {
+        //询问框
+        layer.confirm('是否确认删除？', {
+            btn: ['确定了','再想想'] //按钮
+        }, function(){
+            $.ajax({
+                type : 'post',
+                url : '/exam/deleteExam',
+                data : {"id" : id},
+                success : function (result) {
+                    if(result){
+                        layer.msg('删除成功！', {icon: 1});
+                    }else{
+                        layer.msg('删除失败！', {icon: 0});
+                    }
+                }
+            });
+            window.location.reload();
+        });
+
+    }
+    function updateExam(id,examName,examInfo){
         //alert("assignRole" + id);
-        location.href = "${PATH}/exam/updateExam?id="+id;
+        layer.open({
+            type: 1,
+            title: '修改科目界面',
+            skin: 'layui-layer-rim', //加上边框
+            area: ['400px', '280px'], //宽高
+            content: '<form id="updateExam" action="/exam/updateExam" method="post">\n' +
+                '    <input id=\'id\' class=\'form-control\' type=\'hidden\' name=\'id\' value="'+id+'"/>\n' +
+                '    <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
+                '        <label>科目名称</label><input id=\'examName\' class=\'form-control\' type=\'text\' name=\'examName\' value="'+examName+'"/>\n' +
+                '    </div>\n' +
+                '    <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
+                '        <label>科目备注</label><input id=\'examInfo\' class=\'form-control\' type=\'text\' name=\'examInfo\' value="'+examInfo+'"/>\n' +
+                '    </div>\n' +
+                '    <button type="submit" class="btn btn-block btn-success btn-lg" style="width: 320px;margin-left: 3%;">确认修改</button>\n' +
+                '</form>'
+        });
     }
 </script>
-</body>
 </html>

@@ -16,4 +16,11 @@ public interface PaperRepository {
     public List<Paper> queryPapersByExamId(int examId);
 
     public List<Paper> queryPapersByConditions(String paperName, Integer paperType);
+
+    public List<Paper> queryPapersByUserId(int userId);
+
+    public void insertExamRecord(int paperId, int userId, int userScore);
+
+    public void insertPaper(Paper paper);
+
 }

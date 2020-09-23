@@ -12,4 +12,12 @@ public interface ExamService {
     public List<Exam> queryAllExams();
 
     public List<Exam> queryExams(String examName);
+
+    public void updateExam(Exam exam);
+
+    public Exam queryExamById(Integer id);
+
+    public void insertExam(Exam exam);
+
+    public void deleteExam(Integer id);
 }

@@ -15,5 +15,13 @@ public interface ExamRepository {
 
     public List<Exam> queryExams(String examName);
 
+    public void updateExam(Exam exam);
+
+    public void insertExam(Exam exam);
+
+    public Exam queryExamById(Integer id);
+
+    public void deleteExam(Integer id);
+
 
 }
