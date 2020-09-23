@@ -38,4 +38,8 @@
 		delete from tb_question where id = #{id}
 	</delete>
 
+	<select id="queryQuestionsByExamCode" resultType="Question">
+		select * from tb_question where examCode = #{examCode}
+	</select>
+
 </mapper>

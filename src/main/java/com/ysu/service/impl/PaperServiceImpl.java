@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 万恶de亚撒西 on 2020/9/17.
@@ -49,5 +50,10 @@ public class PaperServiceImpl implements PaperService {
     @Override
     public void insertPaper(Paper paper) {
         paperRepository.insertPaper(paper);
+    }
+
+    @Override
+    public void insertQuestionsToPaper(Map<String, Object> map) {
+        paperRepository.insertQuestionsToPaper(map);
     }
 }

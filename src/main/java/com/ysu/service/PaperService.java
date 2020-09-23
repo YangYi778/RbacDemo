@@ -3,6 +3,7 @@ package com.ysu.service;
 import com.ysu.entity.Paper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 万恶de亚撒西 on 2020/9/17.
@@ -22,5 +23,7 @@ public interface PaperService {
     public void insertExamRecord(int paperId, int userId, int userScore);
 
     public void insertPaper(Paper paper);
+
+    public void insertQuestionsToPaper(Map<String,Object> map);
 
 }

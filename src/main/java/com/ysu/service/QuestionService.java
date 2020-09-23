@@ -21,4 +21,6 @@ public interface QuestionService {
     public void updateQuestion(Question question);
 
     public void deleteQuestion(Integer id);
+
+    public List<Question> queryQuestionsByExamCode(Integer examCode);
 }

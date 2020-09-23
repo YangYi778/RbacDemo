@@ -163,14 +163,14 @@
             ,shade: 0.6 //遮罩透明度
             ,maxmin: false //允许全屏最小化
             ,anim: 1 //0-6的动画形式，-1不开启
-            ,content: '<form action="/exam/addPaper" method="post">\n' +
+            ,content: '<form id=\'paperForm\' action="/exam/addPaper" method="post">\n' +
                 '    <div style=\'width:350px;\'>\n' +
                 '        <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
                 '            <p>试卷名称</p><input id=\'paperName\' class=\'form-control\' type=\'text\' name=\'paperName\' placeholder="请输入考试名称"/>\n' +
                 '        </div>\n' +
                 '        <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
                 '            <p>考试类别</p>\n' +
-                '            <select id="paperType" name="paperType" style="width:150px; height:30px;">\n' +
+                '            <select id="examCode" name="examCode" style="width:150px; height:30px;">\n' +
                 '                <option value="">全部科目</option>\n' +
                 '                <c:forEach items="${exams}" var="exam">\n' +
                 '                    <option value="${exam.id}">${exam.examName}</option>\n' +
@@ -189,13 +189,27 @@
                 '            <p>单选题数量</p><input id=\'singleQuestion\' class=\'form-control\' type=\'number\' name=\'singleQuestion\' />\n' +
                 '        </div>\n' +
                 '        <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
-                '            <p>试卷分数</p><input id=\'paperScore\' class=\'form-control\' type=\'number\' minlength="1" maxlength="3" name=\'paperScore\' />\n' +
-                '        </div>\n' +
-                '        <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
                 '            <p>考试时间</p><input id=\'examTime\' class=\'form-control\' type=\'text\' name=\'examTime\' οnchange="javascript:if(!/^(20|21|22|23|[0-1]?\\d):[0-5]?\\d:[0-5]?\\d$/.test(this.value)){alert(\'时间格式不正确!\');};">\n' +
-                '            <button style=\'margin-top:5%;\' type=\'submit\' class=\'btn btn-block btn-success btn-lg\'>生成试卷</button>\n' +
+                '            <button style=\'margin-top:5%;\' type=\'button\' onclick="submitPaper()" class=\'btn btn-block btn-success btn-lg\'>生成试卷</button>\n' +
                 '        </div>\n' +
                 '</form>'
+        });
+    }
+    function submitPaper() {
+        console.info("paperForm+++" + $("#paperForm").serialize());
+        $.ajax({
+            type : "POST",
+            url : "${PATH}/exam/addPaper",
+            data : $("#paperForm").serialize(),
+            success :function(result){
+                if(result == 0){
+                    layer.msg("题库未录入当前科目试题，请录入后重新尝试！",{timer:1000,icon:0},function(){});
+                }else if(result > 0){
+                    layer.msg("当前题库单选题数量为"+result+"请重新设置！",{timer:1000,icon:0},function(){});
+                }else if(result == -1){
+                    layer.msg("成功生成试卷！",{timer:1000,icon:1},function(){});
+                }
+            }
         });
     }
     //上传文件

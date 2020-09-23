@@ -2,6 +2,7 @@ package com.ysu.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sun.corba.se.spi.ior.ObjectKey;
 import com.ysu.entity.*;
 import com.ysu.service.ExamService;
 import com.ysu.service.PaperService;
@@ -102,7 +103,7 @@ public class ExamController {
 
     /**
      * 修改考试科目
-     * @param id
+     * @param
      * @return
      */
     @RequestMapping(value = "updateExam")
@@ -343,7 +344,7 @@ public class ExamController {
 
     /**
      * 根据用户id查询考试记录并显示
-     * @param userId
+     * @param
      * @param model
      * @param pn
      * @return
@@ -368,23 +369,43 @@ public class ExamController {
         model.addAttribute("pageInfo",page);
         return "/exam/examRecord";
     }
+    @ResponseBody
     @RequestMapping(value = "addPaper")
-    public String addPaper(HttpServletRequest request){
+    public Integer addPaper(HttpServletRequest request){
         String paperName = request.getParameter("paperName");
-        String paperType = request.getParameter("paperType");
-        String singleQuestion = request.getParameter("singleQuestion");
+        Integer examCode = Integer.parseInt(request.getParameter("examCode"));
+        Integer singleQuestion = Integer.parseInt(request.getParameter("singleQuestion"));
         String paperDegree = request.getParameter("paperDegree");
         String examTime = request.getParameter("examTime");
+        //根据科目类别查询当前题库数量是否满足
+        List<Question> result = questionService.queryQuestionsByExamCode(examCode);
+        if(result.size() < singleQuestion){
+            return result.size();//单选题不符合条件
+        }
+        //计算试卷分数
+        int totalScore = 0;
+        List<Integer> queIds = new ArrayList<>();
+        for(Question question : result.subList(0,singleQuestion)){
+            totalScore += question.getQueScore();
+            queIds.add(question.getId());
+        }
         Paper paper = new Paper();
         paper.setPaperName(paperName);
-        paper.setPaperType(Integer.parseInt(paperType));
-        paper.setSingleQueNum(Integer.parseInt(singleQuestion));
+        paper.setPaperType(examCode);
+        paper.setSingleQueNum(singleQuestion);
         paper.setPaperDegree(paperDegree);
+        paper.setPaperScore(totalScore);
         paper.setExamTime(strToTime(examTime));
         paper.setCreateDate(new Date());
         paperService.insertPaper(paper);
 
-        return "exam/paper";
+        System.out.println("***********paperId" + paper.getId());
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("paperId", paper.getId());
+        map.put("queIds", queIds);
+        paperService.insertQuestionsToPaper(map);
+//        return "exam/paper";
+        return -1;
     }
     /**返回java.sql.Time格式
      * @param

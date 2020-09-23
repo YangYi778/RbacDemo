@@ -47,4 +47,9 @@ public class QuestionServiceImpl implements QuestionService {
     public void deleteQuestion(Integer id) {
         questionRepository.deleteQuestion(id);
     }
+
+    @Override
+    public List<Question> queryQuestionsByExamCode(Integer examCode) {
+        return questionRepository.queryQuestionsByExamCode(examCode);
+    }
 }

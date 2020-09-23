@@ -56,8 +56,6 @@
                         </div>
                         <button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询</button>
                     </form>
-                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
-                    <button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
                     <br>
                     <hr style="clear:both;">
                     <div class="table-responsive">
@@ -85,8 +83,7 @@
                                     <td>${paper.examTime }</td>
                                     <td>${paper.userScore }</td>
                                     <td>
-                                        <button type="button" id="updateExam" onclick="updateExam(${exam.id })" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
-                                        <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
+                                        <button type="button" id="paperHistory" onclick="paperHistory(${paper.id })" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-search"></i></button>
                                     </td>
                                 </tr>
                             </c:forEach>

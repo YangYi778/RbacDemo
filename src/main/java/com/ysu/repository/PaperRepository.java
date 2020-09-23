@@ -3,6 +3,7 @@ package com.ysu.repository;
 import com.ysu.entity.Paper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 万恶de亚撒西 on 2020/9/17.
@@ -23,4 +24,5 @@ public interface PaperRepository {
 
     public void insertPaper(Paper paper);
 
+    public void insertQuestionsToPaper(Map<String,Object> map);
 }

@@ -36,7 +36,17 @@
 	</insert>
 
 	<insert id="insertPaper" parameterType="Paper">
-		insert into tb_paper(paperName, paperType, paperDegree, singleQueNum, examTime, createDate) values(#{paperName}, #{paperType}, #{paperDegree}, #{singleQueNum}, #{examTime}, #{createDate})
+		<selectKey keyProperty="id" order="AFTER" resultType="int">
+			select last_insert_id() as id
+		</selectKey>
+		insert into tb_paper(paperName, paperType, paperDegree, paperScore, singleQueNum, examTime, createDate) values(#{paperName}, #{paperType}, #{paperDegree}, #{paperScore}, #{singleQueNum}, #{examTime}, #{createDate})
+	</insert>
+
+	<insert id="insertQuestionsToPaper">
+		insert into tb_paper_question (paperId,questionId) values
+		<foreach collection="queIds" item="queId" separator=",">
+			( #{paperId}, #{queId} )
+		</foreach>
 	</insert>
 
 </mapper>
