@@ -35,20 +35,12 @@ public class PermissionController {
     @Autowired
     private RoleService roleService;
 
-
-    @RequestMapping(value = "treetest")
-    public String treetest(){
-
-        return "permission/treetest";
-    }
-
     @RequestMapping(value="authIndex")
     public String authIndex(HttpServletRequest request) {
         List<Auth> auths = authService.queryAllAuths();
         for(Auth auth: auths) {
             System.out.println(auth);
         }
-
         //pageinfo包装查询后的结果，只需要将pageinfo交给页面就行
         //封装了分页的信息,6表示底部连续显示的页数
         request.getSession().setAttribute("auths", auths);

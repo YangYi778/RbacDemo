@@ -119,6 +119,7 @@ public class UserController {
         return modelAndView;
     }
 
+    //登录验证
     @RequestMapping(value="/doAjaxLogin")
     public Object doAjaxLogin(User user,Model model,HttpSession session) {
         //AjaxResult result = new AjaxResult();	//ajax返回的对象

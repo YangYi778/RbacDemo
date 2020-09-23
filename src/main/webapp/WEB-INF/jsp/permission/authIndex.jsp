@@ -49,29 +49,6 @@
                     <div style="float:right;cursor:pointer;"><button class="btn btn-success " onclick="addAuth()">新增</button>
                     </div>
                 </div>
-                <%--<div>
-                    <form action="/permission/addAuth" method="post">
-                        <div style="width: 350px">
-                            <div class="form-group has-feedback" style="width: 320px;margin-left: 3%;margin-top: 5px">
-                                <p>权限名称</p>
-                                <input class="form-control" type="text" name="name" placeholder="请输入权限名称">
-                            </div>
-                            <div style="width: 320px;margin-left: 3%;margin-top: 5px">
-                                <p>选中父节点</p>
-                                <select name="authParentRoot" style="width: 150px;height: 30px">
-                                    <c:forEach items="${auths }" var = "auth" >
-                                        <option value="${auth.id}">${auth.name}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                            <div style="width: 320px;margin-left: 3%;margin-top: 5px">
-                                <p>权限访问路径</p>
-                                <input class="form-control" type="text" name="authUrl" placeholder="请输入路径名">
-                            </div>
-                            <button style="margin-left:3%;margin-top: 5%" type="submit" class="btn btn-block btn-success btn-lg">添加权限节点</button>
-                        </div>
-                    </form>
-                </div>--%>
                 <div class="panel-body">
                     <ul id="treeDemo" class="ztree"></ul>
                 </div>
@@ -160,7 +137,7 @@
                 }
             }
         });
-/**********************************************************************************/
+
         var setting = {
 
             view : {
@@ -185,7 +162,6 @@
                 // 单击事件
                 onCheck : zTreeOnCheck,
                 beforeRemove : zTreeBeforeRemove,
-                //onRemove : zTreeOnRemove,
                 onRename : zTreeOnRename
             }
         };
@@ -205,15 +181,7 @@
             return ids;
         }
 
-        // 单击事件，向后台发起请求
-        function zTreeOnClick(event, treeId, treeNode) {
-            if (treeNode.id == "1") {
-                return;
-            }
-            //alert(treeNode.tId + ", " + treeNode.name);
-        }
-
-
+        //设置删除按钮
         function setRemoveBtn(treeId, treeNode) {
             if(treeNode.id == 1){
                 return false;
@@ -221,6 +189,7 @@
             return true;
         }
 
+        //设置重命名按钮
         function setRenameBtn(treeId, treeNode) {
             if(treeNode.id == 1){
                 return false;
@@ -228,13 +197,8 @@
             return true;
         }
 
-        /*function zTreeBeforeRemove(treeId, treeNode) {
-            console.info("进来了");
-            if (confirm("是否确认删除"))
-                return true;
-            return false;
-        }*/
-        function zTreeBeforeRemove(treeId, treeNode){//删除节点之前
+        //删除节点之前
+        function zTreeBeforeRemove(treeId, treeNode){
             var zTree = $.fn.zTree.getZTreeObj("treeDemo");
             zTree.selectNode(treeNode);
             if(treeNode.id==1){
@@ -280,22 +244,9 @@
                     layer.close(index);
                     flag=false;
                 })
-            return flag;}
-
-        function zTreeOnRemove(event, treeId, treeNode) {
-            $.ajax({
-                url :"${path}/permission/deleteAuth",
-                data : {
-                    id : treeNode.id,
-                },
-                type : "post",
-                success : function(data) {
-                    deleteDetain(treeNode.id);
-                }
-            });
-
+            return flag;
         }
-
+        //在后台执行重命名操作
         function zTreeOnRename(event, treeId, treeNode) {
             $.ajax({
                 url : "${PATH}/permission/updateAuthName",
@@ -309,12 +260,6 @@
                 }
             });
         }
-        // 异步加载数据过滤器
-        function ajaxDataFilter(treeId, parentNode, responseData) {
-            var data = responseData.returnData.treeList;
-            return data;
-        }
-
         // 节点勾选事件
         function zTreeOnCheck(event, treeId, treeNode) {
             // 显示围栏
@@ -324,25 +269,12 @@
             }
             showDetain([ treeNode.id ]);
         }
-
-        // 获取项目路径
-        function getContextPath() {
-            var currentPath = window.document.location.href;
-            var pathName = window.document.location.pathname;
-            var pos = currentPath.indexOf(pathName);
-            var localhostPath = currentPath.substring(0, pos);
-            var projectName = pathName.substring(0,
-                pathName.substr(1).indexOf('/') + 1);
-            return (localhostPath + projectName);
-        }
-
         return {
             init : function() {
-                basePath = getContextPath();
                 initTree();
             }
         };
-        /*******************************************************************/
+
         function initZTree() {
             $.ajax({
                 url : "${path}/permission/loadData",
@@ -357,31 +289,6 @@
         }
     });
 </script>
-<%--<form action="/permission/addAuth" method="post">
-    <div style="width: 350px">
-        <div class="form-group has-feedback" style="width: 320px;margin-left: 3%;margin-top: 5px">
-            <p>权限名称</p>
-            <input class="form-control" type="text" name="name" placeholder="请输入权限名称">
-        </div>
-        <div style="width: 320px;margin-left: 3%;margin-top: 5px">
-            <p>选中父节点</p>
-            <select name="authParentRoot" style="width: 150px;height: 30px">
-                <option value="${rootAuth.id}">${rootAuth.name}</option>
-                <c:forEach items="${rootAuth.children }" var = "auth" >
-                    <option value="${auth.id}">${auth.name}</option>
-                    <c:forEach items="${auth.children }" var = "child">
-                        <option value="${child.id}">${child.name}</option>
-                    </c:forEach>
-                </c:forEach>
-            </select>
-        </div>
-        <div style="width: 320px;margin-left: 3%;margin-top: 5px">
-            <p>权限访问路径</p>
-            <input class="form-control" type="text" name="authUrl" placeholder="请输入路径名">
-        </div>
-        <button style="margin-left:3%;margin-top: 5%" type="button" class="btn btn-block btn-success btn-lg" onclick="addAuth()">添加权限节点</button>
-    </div>
-</form>--%>
 </body>
 </html>
 
