@@ -2,18 +2,24 @@ package com.ysu.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.ysu.entity.AjaxResult;
 import com.ysu.entity.Auth;
 import com.ysu.entity.Role;
 import com.ysu.entity.User;
 import com.ysu.service.AuthService;
 import com.ysu.service.RoleService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,19 +35,15 @@ public class PermissionController {
     @Autowired
     private RoleService roleService;
 
-
     @RequestMapping(value="authIndex")
-    public String authIndex(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
-        //传入当前页，以及页面的大小
-        PageHelper.startPage(pn,1);
+    public String authIndex(HttpServletRequest request) {
         List<Auth> auths = authService.queryAllAuths();
         for(Auth auth: auths) {
             System.out.println(auth);
         }
         //pageinfo包装查询后的结果，只需要将pageinfo交给页面就行
         //封装了分页的信息,6表示底部连续显示的页数
-        PageInfo page = new PageInfo(auths, 6);
-        model.addAttribute("pageInfo",page);
+        request.getSession().setAttribute("auths", auths);
         return "permission/authIndex";
     }
 
@@ -74,26 +76,9 @@ public class PermissionController {
     @RequestMapping(value="loadData")
     public Object loadData() {
         System.out.println("loadData>>>>>>>>>>>");
-		/*List<Auth> auths = new ArrayList();
-		Auth root = new Auth();
-		root.setName("顶级结点");
-		Auth child = new Auth();
-		child.setName("子节点");
-		root.getChildren().add(child);
-		auths.add(root);
-		return auths;*/
-
-		/*递归调用
-		 * Auth parent = new Auth();
-		parent.setId(0);		//顶层父节点
-		queryChildAuths(parent);
-		return parent.getChildren();*/
-
         //双循环
         List<Auth> authList = new ArrayList<Auth>();
-
         List<Auth> auths = authService.queryAllAuths();
-
         for(Auth auth : auths) {
             //每一个结点都当做它的子节点
             Auth child = auth;
@@ -115,7 +100,6 @@ public class PermissionController {
         return authList;
 
     }
-
     //递归查询权限信息——效率低
     public void queryChildAuths(Auth parent) {
         List<Auth> childAuths = authService.queryChildAuths(parent.getId());
@@ -123,5 +107,54 @@ public class PermissionController {
             queryChildAuths(auth);
         }
         parent.setChildren(childAuths);
+    }
+
+    /*通过id修改权限名称*/
+    @ResponseBody
+    @RequestMapping(value="updateAuthName")
+    public void updateAuthName(HttpServletRequest request,@RequestParam(value = "name",required=false)String name,@RequestParam(value = "id",required=false)int id){
+        try {
+            authService.updateAuthName(name,id);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<Auth> auths = authService.queryAllAuths();
+        request.getSession().setAttribute("auths", auths);
+    }
+
+    /*删除权限*/
+    @ResponseBody
+    @RequestMapping(value = "deleteAuth")
+    public Object deleteAuth(HttpServletRequest request){
+        AjaxResult result = new AjaxResult();
+        String[] ids = request.getParameterValues("ids[]");
+        try {
+            for(String id : ids){
+                System.out.println(Integer.parseInt(id));
+                authService.deleteAuth(Integer.parseInt(id));
+            }
+            result.setSuccess(true);
+        }catch (Exception e){
+            e.printStackTrace();
+            result.setSuccess(false);
+        }
+        return result;
+    }
+
+    /*添加权限*/
+    @ResponseBody
+    @RequestMapping(value = "addAuth")
+    public  Object addAuth(Auth auth){
+        AjaxResult result = new AjaxResult();	//ajax返回的对象
+        List<Auth> auths = authService.queryAuthByName(auth.getName());
+        if(auths.size()==0){
+            try {
+                result.setSuccess(true);
+                authService.insertAuth(auth);
+            }catch (Exception e){
+                result.setSuccess(false);
+            }
+        }
+        return result;
     }
 }

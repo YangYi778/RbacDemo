@@ -22,12 +22,6 @@
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
-    <!-- 配置视图解析器 -->
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/jsp/"></property>
-        <property name="suffix" value=".jsp"></property>
-    </bean>
-
     <!--加载样式文件-->
     <mvc:resources mapping="/css/**" location="/css/" />
     <mvc:resources mapping="/jquery/**" location="/jquery/" />
@@ -36,5 +30,35 @@
 
     <!--<mvc:view-controller path="login" view-name="login"/>-->
     <mvc:view-controller path="/login" view-name="login"/>
-    <mvc:view-controller path="/register"  view-name="register"/>
+    <mvc:view-controller path="/register"  view-name="user/register"/>
+
+    <!--拦截器：-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"></mvc:mapping>
+            <mvc:exclude-mapping path="/login"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/*/register"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/*/active"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/*/doregister"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/*/doAjaxLogin"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/*/vaildationLongName"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/bootsrap/**"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/css/**"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/fonts/**"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/img/**"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/jquery/**"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/layer/**"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/script/**"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/ztree/**"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/time/**"></mvc:exclude-mapping>
+            <bean class="com.ysu.web.LoginInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <!-- 配置视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+
 </beans>

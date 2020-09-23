@@ -21,7 +21,7 @@ public class TestService {
     ApplicationContext context=null;
     @Before
     public void init(){
-        context=new ClassPathXmlApplicationContext("applicationContext.xml");
+        context=new ClassPathXmlApplicationContext("spring.xml");
     }
     @Test
     public void test1(){
@@ -36,7 +36,6 @@ public class TestService {
     public void test2(){
 
         UserService userService=(UserService) context.getBean("userService");
-
         String message=userService.validateLoginName("test1");
         System.out.println(message+"***");
     }

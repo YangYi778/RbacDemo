@@ -15,4 +15,29 @@ public interface AuthService {
     public List<Auth> queryAllAuths();
 
     public List<Auth> queryAuthByUser(User u);
+
+    /*
+     * 添加权限
+     * */
+    public void insertAuth(Auth auth);
+
+    /*
+     * 编辑权限信息
+     * */
+    public void updateAuth(Auth auth);
+
+    /*
+     * 删除权限
+     * */
+    public void deleteAuth(int id);
+
+    /*
+    * 通过ID修改权限名
+    * */
+    public void updateAuthName(String name,int id);
+
+    /*
+     * 通过权限名来查权限
+     * */
+    public List<Auth> queryAuthByName(String name);
 }

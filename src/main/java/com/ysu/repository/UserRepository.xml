@@ -20,7 +20,6 @@
 
     <insert id="insertUserRoles">
         insert into tb_user_role (userId, roleId) values
-
         <foreach collection="roleIds" item="roleId" separator=",">
             ( #{userId}, #{roleId} )
         </foreach>
@@ -28,7 +27,6 @@
 
     <delete id="deleteUserRoles">
         delete from tb_user_role where userId = #{userId} and roleId in
-
         <foreach collection="roleIds" item="roleId" separator="," open="(" close=")">
             #{roleId}
         </foreach>
