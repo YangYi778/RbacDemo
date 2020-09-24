@@ -12,6 +12,8 @@ public interface PaperRepository {
 
     public List<Paper> queryAllPapers();
 
+    public List<Paper> queryAllPapersAdmin();
+
     public Paper queryPaperById(int id);
 
     public List<Paper> queryPapersByExamId(int examId);
@@ -25,4 +27,10 @@ public interface PaperRepository {
     public void insertPaper(Paper paper);
 
     public void insertQuestionsToPaper(Map<String,Object> map);
+
+    public void updatePaperById(Paper paper);
+
+    public void deletePaperById(Integer id);
+
+    public void releasePaperById(Integer id);
 }

@@ -2,7 +2,6 @@ package com.ysu.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sun.corba.se.spi.ior.ObjectKey;
 import com.ysu.entity.*;
 import com.ysu.service.ExamService;
 import com.ysu.service.PaperService;
@@ -15,16 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import sun.security.krb5.internal.PAEncTSEnc;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.beans.PropertyEditorSupport;
 import java.io.InputStream;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
@@ -189,10 +184,10 @@ public class ExamController {
      * 手动生成试卷：要求试题管理页面按考试科目显示试题列表，通过复选框或其他方式批量添加试题到试卷
      */
     @RequestMapping(value = "paper")
-    public String paper(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
+    public String paper(@RequestParam(value="pn", defaultValue="1")Integer pn,Model model) {
         //传入当前页，以及页面的大小
         PageHelper.startPage(pn,1);
-        List<Paper> papers = paperService.queryAllPapers();
+        List<Paper> papers = paperService.queryAllPapersAdmin();
         List<Exam> exams = examService.queryAllExams();
         for(Paper paper: papers) {
             System.out.println(paper);
@@ -203,6 +198,31 @@ public class ExamController {
         model.addAttribute("pageInfo",page);
         model.addAttribute("exams",exams);
         return "exam/paper";
+    }
+
+    @RequestMapping(value = "releasePaper")
+    public boolean releasePaper(@RequestParam("id") Integer id) {
+        System.out.println("&&&&&&&&&&&&&&&");
+        System.out.println("id_+_+_+_" + id);
+        try {
+            paperService.releasePaperById(id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    @RequestMapping(value = "deletePaper")
+    public boolean deletePaper(@RequestParam("id") Integer id){
+            System.out.println("&&&&&&&&&&&&&&&");
+            System.out.println("id_+_+_+_" + id);
+            try {
+                paperService.deletePaperById(id);
+                return true;
+            }catch (Exception e){
+                e.printStackTrace();
+                return false;
+            }
     }
 
     /**
@@ -372,11 +392,13 @@ public class ExamController {
     @ResponseBody
     @RequestMapping(value = "addPaper")
     public Integer addPaper(HttpServletRequest request){
+
         String paperName = request.getParameter("paperName");
         Integer examCode = Integer.parseInt(request.getParameter("examCode"));
         Integer singleQuestion = Integer.parseInt(request.getParameter("singleQuestion"));
         String paperDegree = request.getParameter("paperDegree");
         String examTime = request.getParameter("examTime");
+
         //根据科目类别查询当前题库数量是否满足
         List<Question> result = questionService.queryQuestionsByExamCode(examCode);
         if(result.size() < singleQuestion){
@@ -396,15 +418,20 @@ public class ExamController {
         paper.setPaperDegree(paperDegree);
         paper.setPaperScore(totalScore);
         paper.setExamTime(strToTime(examTime));
-        paper.setCreateDate(new Date());
-        paperService.insertPaper(paper);
+        if(request.getParameter("id") != null){
+            paper.setId(Integer.parseInt(request.getParameter("id")));
+            paperService.updatePaper(paper);
+        }else{
+            paper.setCreateDate(new Date());
 
-        System.out.println("***********paperId" + paper.getId());
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("paperId", paper.getId());
-        map.put("queIds", queIds);
-        paperService.insertQuestionsToPaper(map);
-//        return "exam/paper";
+            paperService.insertPaper(paper);
+
+            System.out.println("***********paperId" + paper.getId());
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("paperId", paper.getId());
+            map.put("queIds", queIds);
+            paperService.insertQuestionsToPaper(map);
+        }
         return -1;
     }
     /**返回java.sql.Time格式

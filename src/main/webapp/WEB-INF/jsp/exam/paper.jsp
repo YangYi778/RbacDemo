@@ -77,6 +77,7 @@
                                 <th>试卷类别</th>
                                 <th>试卷名称</th>
                                 <th>试卷等级</th>
+                                <th>单选题数</th>
                                 <th>试卷分值</th>
                                 <th>考试时长</th>
                                 <th>创建时间</th>
@@ -92,14 +93,15 @@
                                     <td>${paper.paperType }</td>
                                     <td>${paper.paperName }</td>
                                     <td>${paper.paperDegree }</td>
+                                    <td>${paper.singleQueNum }</td>
                                     <td>${paper.paperScore }</td>
                                     <td>${paper.examTime }</td>
                                     <td>${paper.createDate }</td>
                                     <td>${paper.paperStatus }</td>
                                     <td>
-                                        <button type="button" id="releasePaper" onclick="assignRole(${paper.id })" class="btn btn-success btn-xs"><i class="glyphicon glyphicon-circle-arrow-up"></i></button>
-                                        <button type="button" id="updatePaper" onclick="updatePaper(${paper.id })" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
-                                        <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
+                                        <button type="button" id="releasePaper" onclick="releasePaper(${paper.id })" class="btn btn-success btn-xs"><i class="glyphicon glyphicon-circle-arrow-up"></i></button>
+                                        <button type="button" id="updatePaper" onclick="updatePaper(${paper.id },'${paper.paperName}', ${paper.singleQueNum},'${paper.examTime}')" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
+                                        <button type="button" id="deletePaper" onclick="deletePaper(${paper.id})" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -154,6 +156,46 @@
             }
         });
     });
+    function releasePaper(id) {
+        //询问框
+        layer.confirm('是否确认发布？', {
+            btn: ['确定了','不着急'] //按钮
+        }, function(){
+            $.ajax({
+                type : 'post',
+                url : '/exam/releasePaper',
+                data : {"id" : id},
+                success : function (result) {
+                    if(result){
+                        layer.msg('发布成功！', {icon: 1});
+                    }else{
+                        layer.msg('发布失败！', {icon: 0});
+                    }
+                }
+            });
+            window.location.reload();
+        });
+    }
+    function deletePaper(id) {
+        //询问框
+        layer.confirm('是否确认删除？', {
+            btn: ['确定了','再想想'] //按钮
+        }, function(){
+            $.ajax({
+                type : 'post',
+                url : '/exam/deletePaper',
+                data : {"id" : id},
+                success : function (result) {
+                    if(result){
+                        layer.msg('删除成功！', {icon: 1});
+                    }else{
+                        layer.msg('删除失败！', {icon: 0});
+                    }
+                }
+            });
+            window.location.reload();
+        });
+    }
     function addPaper() {
         //在这里面输入任何合法的js语句
         layer.open({
@@ -163,7 +205,7 @@
             ,shade: 0.6 //遮罩透明度
             ,maxmin: false //允许全屏最小化
             ,anim: 1 //0-6的动画形式，-1不开启
-            ,content: '<form id=\'paperForm\' action="/exam/addPaper" method="post">\n' +
+            ,content: '<form id=\'paperAddForm\' action="/exam/addPaper" method="post">\n' +
                 '    <div style=\'width:350px;\'>\n' +
                 '        <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
                 '            <p>试卷名称</p><input id=\'paperName\' class=\'form-control\' type=\'text\' name=\'paperName\' placeholder="请输入考试名称"/>\n' +
@@ -200,7 +242,7 @@
         $.ajax({
             type : "POST",
             url : "${PATH}/exam/addPaper",
-            data : $("#paperForm").serialize(),
+            data : $("#paperAddForm").serialize(),
             success :function(result){
                 if(result == 0){
                     layer.msg("题库未录入当前科目试题，请录入后重新尝试！",{timer:1000,icon:0},function(){});
@@ -250,9 +292,63 @@
     $("tbody .btn-primary").click(function(){
         window.location.href = "edit.html";
     }); */
-    function updatePaper(id){
+    function updatePaper(id,paperName,singleQueNum,examTime){
         //alert("assignRole" + id);
-        location.href = "${PATH}/exam/paperUpdate?id="+id;
+        //在这里面输入任何合法的js语句
+        layer.open({
+            type: 1 //Page层类型
+            ,area: ['420px', '670px']
+            ,title: '试卷修改界面'
+            ,shade: 0.6 //遮罩透明度
+            ,maxmin: false //允许全屏最小化
+            ,anim: 1 //0-6的动画形式，-1不开启
+            ,content: '<form id=\'paperUpdateForm\' action="/exam/updatePaper" method="post">\n' +
+                '    <input type="hidden" id="id" name="id" value="'+id+'" />\n' +
+                '    <div style=\'width:350px;\'>\n' +
+                '        <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
+                '            <p>试卷名称</p><input id=\'paperName\' class=\'form-control\' type=\'text\' name=\'paperName\' value="'+paperName+'"/>\n' +
+                '        </div>\n' +
+                '        <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
+                '            <p>考试类别</p>\n' +
+                '            <select id="examCode" name="examCode" style="width:150px; height:30px;">\n' +
+                '                <c:forEach items="${exams}" var="exam">\n' +
+                '                    <option value="${exam.id}">${exam.examName}</option>\n' +
+                '                </c:forEach>\n' +
+                '            </select>\n' +
+                '        </div>\n' +
+                '        <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
+                '            <p>试卷难度</p>\n' +
+                '            <select id="paperDegree" name="paperDegree" style="width:150px; height:30px;">\n' +
+                '                <option value="困难">困难</option>\n' +
+                '                <option value="中等">中等</option>\n' +
+                '                <option value="简单">简单</option>\n' +
+                '            </select>\n' +
+                '        </div>\n' +
+                '        <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
+                '            <p>单选题数量</p><input id=\'singleQuestion\' class=\'form-control\' type=\'number\' name=\'singleQuestion\' value="'+singleQueNum+'" />\n' +
+                '        </div>\n' +
+                '        <div style=\'width:320px;margin-left: 3%;\' class=\'form-group has-feedback\'>\n' +
+                '            <p>考试时间</p><input id=\'examTime\' class=\'form-control\' type=\'text\' value="'+examTime+'" name=\'examTime\' οnchange="javascript:if(!/^(20|21|22|23|[0-1]?\\d):[0-5]?\\d:[0-5]?\\d$/.test(this.value)){alert(\'时间格式不正确!\');};">\n' +
+                '            <button style=\'margin-top:5%;\' type=\'button\' onclick="updateSubmit()" class=\'btn btn-block btn-success btn-lg\'>提交修改</button>\n' +
+                '        </div>\n' +
+                '</form>'
+        });
+    }
+    function updateSubmit() {
+        $.ajax({
+            type : "POST",
+            url : "${PATH}/exam/addPaper",
+            data : $("#paperUpdateForm").serialize(),
+            success :function(result){
+                if(result == 0){
+                    layer.msg("题库未录入当前科目试题，请录入后重新尝试！",{timer:1000,icon:0},function(){});
+                }else if(result > 0){
+                    layer.msg("当前题库单选题数量为"+result+"请重新设置！",{timer:1000,icon:0},function(){});
+                }else if(result == -1){
+                    layer.msg("成功修改试卷！",{timer:1000,icon:1},function(){});
+                }
+            }
+        });
     }
     function uploadFile(){
         $("#fileName").val($("#fileName").val());

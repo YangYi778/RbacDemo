@@ -21,8 +21,9 @@ public class Paper {
     private int singleQueNum;
     private Time examTime;
     private Date createDate;
-    private int paperStatus;
-    private int userId;
+    private Integer paperStatus;
+    private Integer userId;
+
     private int userScore;
 
     private List<Question> questions = new ArrayList<>();
