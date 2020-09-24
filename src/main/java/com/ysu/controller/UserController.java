@@ -67,7 +67,13 @@ public class UserController {
         AjaxResult result = new AjaxResult();	//ajax返回的对象
         try {
             userService.saveUser(user,request);
+
             System.out.println("1");
+            Integer a[] = {6};
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("userId",user.getUserId());
+            map.put("roleIds",a);
+            userService.insertUserRoles(map);
             result.setSuccess(true);
         } catch (Exception e) {
             // TODO: handle exception
