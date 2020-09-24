@@ -147,7 +147,6 @@ public class UserController {
                 }
             }
             session.setAttribute("rootAuth", root);
-            //result.setSuccess(true);
         }
         return "main";
     }

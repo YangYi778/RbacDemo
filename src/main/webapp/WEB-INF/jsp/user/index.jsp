@@ -117,15 +117,9 @@
     </div>
 </div>
 
-<<<<<<< HEAD
-<script src="../../jquery/jquery-2.1.1.min.js"></script>
-<script src="../../bootstrap/js/bootstrap.min.js"></script>
-<script src="../../script/docs.min.js"></script>
-=======
 <script src="${path}/jquery/jquery-2.1.1.min.js"></script>
 <script src="${path}/bootstrap/js/bootstrap.min.js"></script>
 <script src="${path}/script/docs.min.js"></script>
->>>>>>> HQT-002
 <script type="text/javascript">
     $(function () {
         $(".list-group-item").click(function(){
@@ -139,12 +133,6 @@
             }
         });
     });
-    /* $("tbody .btn-success").click(function(){
-        window.location.href = "assignRole.html";
-    });
-    $("tbody .btn-primary").click(function(){
-        window.location.href = "edit.html";
-    }); */
     function assignRole(id){
         //alert("assignRole" + id);
         location.href = "${PATH}/user/assign?id="+id;

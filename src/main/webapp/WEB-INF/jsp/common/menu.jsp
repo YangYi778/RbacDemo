@@ -13,7 +13,7 @@
     <c:forEach items="${rootAuth.children }" var = "auth" >
         <c:if test="${empty rootAuth.children }">
             <li class="list-group-item tree-closed" >
-                <a href="${PATH }${auth.authUrl}"><i class="${auth.icon }"></i> ${auth.name }</a>
+                <a href="${PATH }${rootauth.authUrl}"><i class="${rootauth.icon }"></i> ${rootauth.name }</a>
             </li>
         </c:if>
         <c:if test="${not empty auth.children }">
