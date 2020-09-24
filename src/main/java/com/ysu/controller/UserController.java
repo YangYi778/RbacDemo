@@ -205,6 +205,49 @@ public class UserController {
     }
 
     /**
+     * 权限分配——对当前选中的角色 进行权限分配
+     * 为当前ID角色 分配权限
+     * 角色---》权限
+     */
+    @RequestMapping("/assignPermission")
+    public String assignPermission(Integer id, Model model){
+        //根据用户id查找所有
+        //User user = userService.queryUserById(id);
+        Role role=roleService.queryRoleById(id);
+        System.out.println("rolePermission=== " + role + "--------->>>>");
+        model.addAttribute("role", role);
+
+        //查询所有权限
+        List<Auth> auths = authService.queryAllAuths();
+        //建立分配的角色与未分配的角色集合
+        List<Auth> assignedPermission = new ArrayList();
+        List<Auth> unassignedPermission = new ArrayList();
+
+        //查询该用户 已分配权限
+        // List<Integer> authIds = userService.queryRoleIdsByUserId(id);
+        List<Integer> authIds = authService.queryAuthIdsByRoleId(id);
+
+        int j=0;
+        for(Auth auth:auths) {
+
+            //auth  是遍历对象  auths是被遍历的列表
+            if(authIds.contains(auth.getId()))
+            {
+                assignedPermission.add(auth);
+            }else {
+                //当前用户未拥有的权限
+                unassignedPermission.add(auth);
+            }
+        }
+        System.out.println("assignedPermission=====" + assignedPermission);
+        System.out.println("unassignedPermission*******"+ unassignedPermission);
+        model.addAttribute("assignedPermission",assignedPermission);
+        model.addAttribute("unassignedPermission",unassignedPermission);
+        model.addAttribute("roleId",role.getRoleId());
+        return "user/assignPermission";
+    }
+
+    /**
      * 分配角色——对应页面 >> 按钮
      */
     @ResponseBody
@@ -227,6 +270,68 @@ public class UserController {
         return result;
 
     }
+
+    // 权限分配的 》》
+    @ResponseBody
+    @RequestMapping(value="doAssignPermission")
+    public Object doAssignPermission(Integer roleId, Integer[] unassignedPermission) {
+        // System.out.println("roleIdPermission == " + roleId);
+        Auth auth;
+        Auth parentAuth;
+        Integer count=0,k=0;
+        Integer lengthOflist=0;
+        Integer[] unass = new Integer[20];
+
+        List<Auth> sonAuths ;
+        List<Auth> auths = new ArrayList();//所有待添加权限列表   去重后的
+        for(Integer temp : unassignedPermission){
+            System.out.println(temp);//当前 权限ID
+            auth=authService.queryAuthById(temp);//auth 当前待添加权限
+            if(!auths.contains(auth))//每次需要添加节点时 同时判断其子节点 和 父节点 是否在待添加列表里
+            {
+                //待添加权限列表 没有该权限  需要添加
+                unass[count++]=temp;//将待添加的节点 添加到 unass数组中
+                auths.add(auth);
+                lengthOflist++;
+
+                //查询该权限所有子节点 并且添加进入 待添加权限列表
+                sonAuths=authService.queryAllSonAuths(temp);
+                for(Auth authtemp:sonAuths){
+                    //先判重？ 不重复则添加
+                    if(!auths.contains(authtemp)) {
+                        k=authtemp.getId();
+                        unass[count] =k;//子节点ID添加入 待添加列表
+                        count ++;lengthOflist++;
+                        auths.add(authtemp);
+                    }
+                }
+                //查询该节点 父节点是否存在  不在则添加
+                parentAuth=authService.queryAuthById(auth.getAuthParentRoot());
+                if(!auths.contains(parentAuth)){
+                    //添加其父节点
+                    unass[count++]=parentAuth.getId();//父节点ID添加入 待添加列表
+                    auths.add(parentAuth);lengthOflist++;
+                }
+            }
+        }
+        Integer[] readyInsertPermission=new Integer[lengthOflist];
+        for(int p=0;p<lengthOflist;p++){
+            readyInsertPermission[p]=unass[p];
+        }
+        AjaxResult result = new AjaxResult();
+        try {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("roleId", roleId);
+            map.put("permissionIds", readyInsertPermission);
+            roleService.insertRolePermission(map);
+            result.setSuccess(true);
+        } catch(Exception e) {
+            result.setSuccess(false);
+        }
+        return result;
+    }
+
+
     /**
      * 取消分配角色——对应页面 << 按钮
      */
@@ -249,5 +354,77 @@ public class UserController {
         }
         return result;
 
+    }
+
+    //权限分配的 《《 取消分配按钮
+    @ResponseBody
+    @RequestMapping(value="dounAssignPermission")
+    public Object dounAssignPermission(Integer roleId, Integer[] assignedPermission) {
+        Auth auth;
+        List<Integer> authIds;
+        List<Auth> allSonAuth;
+        List<Auth> allSonAuthFromParent;
+        List<Auth> auths = new ArrayList();//所有待删除权限列表   去重后的
+        Integer count=0;
+        Integer tempint=0;
+        Integer lengthOfass=0;
+        Integer[] ass=new Integer[100];//创建ass保留所有要删除的权限ID assignedPermission
+        for(Integer temp : assignedPermission){
+            //System.out.println(temp);//当前 权限ID
+            auth=authService.queryAuthById(temp);//auth 当前待删除权限
+
+            if(!auths.contains(auth)&&auth.getAuthParentRoot()!=0)//非系统菜单 可删除&&没有添加过 可以添加入 删除列表
+            {
+                //删除自己本身
+                ass[count++]=temp;
+                lengthOfass++;
+                auths.add(auth);
+                //查找所有子节点，然后删除
+                allSonAuth=authService.queryAllSonAuths(temp);
+                for(Auth tempauth:allSonAuth){
+                    if(!auths.contains(tempauth))
+                    {
+                        ass[count++] =tempauth.getId();//将所有子节点 加入删除队列；
+                        lengthOfass++;
+                        auths.add(tempauth);
+                    }
+                }
+                if(auths.contains(authService.queryAuthById(auth.getAuthParentRoot()))&&auth.getAuthParentRoot()!=1)
+                {//父节点是系统菜单不可删 &&父节点 已经 添加入删除列表  则不重复添加
+                    //找出当前角色父节点的所有字节点  若只有 一个  则 肯定是当前 节点--》删除其父节点
+                    //当前节点 父节点的 所有子节点
+                    allSonAuthFromParent=authService.queryAllSonAuths(auth.getAuthParentRoot());
+                    //查找 当前角色的所有权限  从所有权限中判断
+                    authIds=authService.queryAuthIdsByRoleId(roleId);//当前角色的所有 权限ID
+                    //遍历 查找 当前角色是否还有 自他兄弟节点
+                    for(Auth tempauth2:allSonAuthFromParent){
+                        if(authIds.contains(tempauth2.getId())){
+                            tempint++;
+                        }
+                    }
+                    if( tempint<=1){//只能找到 这一个节点  则可以删除父节点
+                        ass[count++]=auth.getAuthParentRoot();
+                        lengthOfass++;
+                        auths.add(authService.queryAuthById(auth.getAuthParentRoot()));
+                    }
+                }
+            }
+        }
+        System.out.println("----------------------------------"+lengthOfass);
+        Integer[] readyDeletePermission=new Integer[lengthOfass];
+        for(int p=0;p<lengthOfass;p++){
+            readyDeletePermission[p]=ass[p];
+        }
+        AjaxResult result = new AjaxResult();
+        try {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("roleId", roleId);
+            map.put("permissionIds", readyDeletePermission);
+            roleService.deleteRolePermission(map);
+            result.setSuccess(true);
+        } catch(Exception e) {
+            result.setSuccess(false);
+        }
+        return result;
     }
 }

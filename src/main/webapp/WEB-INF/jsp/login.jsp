@@ -64,7 +64,7 @@
                 <div class="btn-group btn-group-justified" role="group"
                      aria-label="...">
                     <div class="btn-group" role="group">
-                        <button type="submit" id="loginBtn" class="btn btn-success" onclick="dologin()">
+                        <button type="submit" id="loginBtn" class="btn btn-success" >
                         <span class="glyphicon glyphicon-log-in"></span>&nbsp;登录
                     </button>
                     </div>

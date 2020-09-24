@@ -23,7 +23,6 @@ public class Paper {
     private Date createDate;
     private int paperStatus;
     private int userId;
-
     private int userScore;
 
     private List<Question> questions = new ArrayList<>();

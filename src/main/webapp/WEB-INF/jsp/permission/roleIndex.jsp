@@ -1,4 +1,3 @@
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%--
   Created by IntelliJ IDEA.
   User: 万恶de亚撒西
@@ -9,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
+<!--生命当前页面的语言类型-->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -61,7 +61,7 @@
                     <hr style="clear:both;">
                     <div class="table-responsive">
                         <table class="table  table-bordered">
-                            <thead>
+                          <thead>
                             <tr >
                                 <th width="30">#</th>
                                 <th width="30"><input type="checkbox"></th>
@@ -70,14 +70,18 @@
                             </tr>
                             </thead>
                             <tbody>
-<%--                                <c:forEach items="${roles}" var="role" varStatus="r">--%>
-<%--                                    <tr>--%>
-<%--                                        <td>${role.roleName}</td>--%>
-<%--                                        <td>${role.roleName}</td>--%>
-<%--                                        <td>${role.roleName}</td>--%>
-<%--                                        <td>${role.roleName}</td>--%>
-<%--                                    </tr>--%>
-<%--                                </c:forEach>--%>
+                            <c:forEach items="${pageInfo.list }" var="role" varStatus="s">
+                                <tr>
+                                    <td>${s.count }</td>
+                                    <td><input type="checkbox"></td>
+                                    <td>${role.roleName }</td>
+                                    <td>
+                                        <button type="button" id="assignPermission" onclick="assignPermission(${role.roleId })" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>
+                                        <button type="button" class="btn btn-primary btn-xs"><i class=" glyphicon glyphicon-pencil"></i></button>
+                                        <button type="button" class="btn btn-danger btn-xs"><i class=" glyphicon glyphicon-remove"></i></button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
                             </tbody>
                             <tfoot>
                             <tr >
@@ -128,10 +132,10 @@
             }
         });
     });
+    function assignPermission(id){
 
-    $("tbody .btn-success").click(function(){
-        window.location.href = "assignPermission.html";
-    });
+        location.href = "${PATH}/user/assignPermission?id="+id;
+    }
 </script>
 </body>
 </html>

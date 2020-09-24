@@ -50,4 +50,21 @@ public interface AuthRepository {
     * 通过权限名来查权限
     * */
     public List<Auth> queryAuthByName(String name);
+
+    /*
+    * 通过角色查权限
+    * */
+    public List<Integer> queryAuthIdsByRoleId(Integer id);
+
+    /*
+    * 通过id找权限
+    * */
+    public Auth queryAuthById(Integer id);
+
+    /*
+    * 找子权限
+    * */
+    public List<Auth> queryAllSonAuths(Integer id);
+
+
 }

@@ -42,7 +42,7 @@
             <mvc:exclude-mapping path="/*/doregister"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/*/doAjaxLogin"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/*/vaildationLongName"></mvc:exclude-mapping>
-            <mvc:exclude-mapping path="/**/bootsrap/**"></mvc:exclude-mapping>
+            <mvc:exclude-mapping path="/**/bootstrap/**"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/**/css/**"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/**/fonts/**"></mvc:exclude-mapping>
             <mvc:exclude-mapping path="/**/img/**"></mvc:exclude-mapping>

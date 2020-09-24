@@ -56,4 +56,19 @@ public class AuthServiceImpl implements AuthService {
         List<Auth> auths = authRepository.queryAuthByName(name);
         return auths;
     }
+
+    @Override
+    public List<Auth> queryAllSonAuths(Integer id) {
+        return authRepository.queryAllSonAuths(id);
+    }
+
+    @Override
+    public Auth queryAuthById(Integer id) {
+        return authRepository.queryAuthById(id);
+    }
+
+    @Override
+    public List<Integer> queryAuthIdsByRoleId(Integer id) {
+        return authRepository.queryAuthIdsByRoleId(id);
+    }
 }

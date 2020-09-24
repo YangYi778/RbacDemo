@@ -40,4 +40,11 @@ public interface AuthService {
      * 通过权限名来查权限
      * */
     public List<Auth> queryAuthByName(String name);
+
+
+    public List<Integer> queryAuthIdsByRoleId(Integer id);
+
+    public Auth queryAuthById(Integer id);
+
+    public List<Auth> queryAllSonAuths(Integer id);
 }

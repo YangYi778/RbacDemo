@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 万恶de亚撒西 on 2020/9/15.
@@ -19,5 +20,20 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<Role> queryAllRole() {
         return roleRepository.queryAllRole();
+    }
+
+    @Override
+    public void insertRolePermission(Map<String, Object> map) {
+        roleRepository.insertRolePermission(map);
+    }
+
+    @Override
+    public void deleteRolePermission(Map<String, Object> map) {
+        roleRepository.deleteRolePermission(map);
+    }
+
+    @Override
+    public Role queryRoleById(Integer id) {
+        return roleRepository.queryRoleById(id);
     }
 }

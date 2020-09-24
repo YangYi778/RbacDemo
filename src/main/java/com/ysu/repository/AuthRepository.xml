@@ -29,6 +29,18 @@
 		SELECT * FROM tb_auth WHERE name=#{name}
 	</select>
 
+	<select id="queryAuthIdsByRoleId" resultType="java.lang.Integer">
+		select authId from tb_role_auth where roleId = #{roleId}
+	</select>
+
+	<select id="queryAuthById" resultType="Auth">
+		select * from tb_auth where id = #{authId}
+	</select>
+
+	<select id="queryAllSonAuths" resultType="Auth">
+		select * from tb_auth where authParentRoot = #{authId}
+	</select>
+
 	<update id="updateAuthName" >
 		UPDATE  tb_auth SET name=#{name} WHERE id=#{id}
 	</update>

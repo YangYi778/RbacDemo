@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ysu.repository.RoleRepository">
-    <select id="queryAllRole" resultType="Role">
+
+	<insert id="insertRolePermission">
+		insert into tb_role_auth (roleId, authId) values
+		<foreach collection="permissionIds" item="authId" separator=",">
+			( #{roleId}, #{authId} )
+		</foreach>
+	</insert>
+
+	<select id="queryAllRole" resultType="Role">
 		select * from tb_role
 	</select>
+
+	<select id="queryRoleById" resultType="Role">
+		select * from tb_role where roleId = #{roleId}
+	</select>
+
+	<delete id="deleteRolePermission">
+		delete from tb_role_auth where roleId = #{roleId} and authId in
+
+		<foreach collection="permissionIds" item="authId" separator="," open="(" close=")">
+			#{authId}
+		</foreach>
+	</delete>
 
 </mapper>
