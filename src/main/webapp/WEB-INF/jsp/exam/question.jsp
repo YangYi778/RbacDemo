@@ -110,29 +110,52 @@
                             </c:forEach>
                             </tbody>
                             <tfoot>
-                            <tr>
+                            <tr >
                                 <td colspan="6" align="center">
                                     <ul class="pagination">
-                                        <li><a href="question?pn=1">首页</a></li>
+                                        <li><a href="index?pn=1">首页</a></li>
                                         <c:if test="${pageInfo.hasPreviousPage }">
-                                            <li><a href="question?pn=${pageInfo.pageNum-1 }" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                                            <li><a href="paper?pn=${pageInfo.pageNum-1 }" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
                                         </c:if>
                                         <c:forEach items="${pageInfo.navigatepageNums }" var="page_Num">
                                             <c:if test="${page_Num == pageInfo.pageNum }">
                                                 <li class="active"><a href="#">${page_Num }</a></li>
                                             </c:if>
                                             <c:if test="${page_Num != pageInfo.pageNum }">
-                                                <li><a href="question?pn=${page_Num }">${page_Num }</a></li>
+                                                <li><a href="paper?pn=${page_Num }">${page_Num }</a></li>
                                             </c:if>
                                         </c:forEach>
                                         <c:if test="${pageInfo.hasNextPage }">
-                                            <li><a href="question?pn=${pageInfo.pageNum+1 }" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                                            <li><a href="paper?pn=${pageInfo.pageNum+1 }" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
                                         </c:if>
-                                        <li><a href="question?pn=${pageInfo.pages }">尾页</a></li>
+                                        <li><a href="paper?pn=${pageInfo.pages }">尾页</a></li>
                                     </ul>
                                 </td>
                             </tr>
-
+                            <%--<div>
+                                <tr>
+                                    <td colspan="6" align="center">
+                                        <ul class="pagination">
+                                            <li><a href="question?pn=1">首页</a></li>
+                                            <c:if test="${pageInfo.hasPreviousPage }">
+                                                <li><a href="question?pn=${pageInfo.pageNum-1 }" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                                            </c:if>
+                                            <c:forEach items="${pageInfo.navigatepageNums }" var="page_Num">
+                                                <c:if test="${page_Num == pageInfo.pageNum }">
+                                                    <li class="active"><a href="#">${page_Num }</a></li>
+                                                </c:if>
+                                                <c:if test="${page_Num != pageInfo.pageNum }">
+                                                    <li><a href="question?pn=${page_Num }">${page_Num }</a></li>
+                                                </c:if>
+                                            </c:forEach>
+                                            <c:if test="${pageInfo.hasNextPage }">
+                                                <li><a href="question?pn=${pageInfo.pageNum+1 }" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                                            </c:if>
+                                            <li><a href="question?pn=${pageInfo.pages }">尾页</a></li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </div>--%>
                             </tfoot>
                         </table>
                     </div>

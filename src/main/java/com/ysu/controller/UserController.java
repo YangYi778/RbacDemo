@@ -478,8 +478,13 @@ public class UserController {
         System.out.println("@@@"+user);
         String result = userService.validateLoginName(user.getUserName());
         System.out.println("%%%%"+result);
-        if (result==""){
+        if (result==null && result == ""){
             userService.insertUser(user);
+            Integer a[] = {6};
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("userId", user.getUserId());
+            map.put("roleIds", a);
+            userService.insertUserRoles(map);
             System.out.println("$$$"+user);
             return "redirect:index";
         }

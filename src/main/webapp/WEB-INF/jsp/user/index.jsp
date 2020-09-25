@@ -53,7 +53,7 @@
                 </div>
                 <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
                 <button type="button" class="btn btn-primary" style="float:right;" onclick="addUser()"><i class="glyphicon glyphicon-plus"></i> 新增</button><br>
-                <span style="float: left;color: red" id="errormessage"></span>
+                <span style="float: left;color: red" id="errormessage">${errormessage}</span>
                 <hr style="clear:both;">
                 <div class="table-responsive">
                     <table class="table  table-bordered">

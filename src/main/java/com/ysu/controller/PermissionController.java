@@ -56,7 +56,7 @@ public class PermissionController {
     @RequestMapping(value="roleIndex")
     public String roleIndex(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
-        PageHelper.startPage(pn,1);
+        PageHelper.startPage(pn,5);
         List<Role> roles = roleService.queryAllRole();
         for(Role role: roles) {
             System.out.println(role);

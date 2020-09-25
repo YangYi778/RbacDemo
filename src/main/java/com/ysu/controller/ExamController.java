@@ -50,7 +50,7 @@ public class ExamController {
 
         List<Exam> exams = examService.queryAllExams();
         //传入当前页，以及页面的大小
-        PageHelper.startPage(pn,2);
+        PageHelper.startPage(pn,5);
         List<Paper> papers = paperService.queryAllPapers();
         for(Paper paper: papers) {
             System.out.println(paper);
@@ -84,7 +84,7 @@ public class ExamController {
     @RequestMapping(value = "index")
     public String index(@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
-        PageHelper.startPage(pn,2);
+        PageHelper.startPage(pn,5);
         List<Exam> exams = examService.queryAllExams();
         for(Exam exam: exams) {
             System.out.println(exam);
@@ -130,7 +130,7 @@ public class ExamController {
     @RequestMapping(value = "question")
     public String question(HttpServletRequest request,@RequestParam(value="pn", defaultValue="1")Integer pn, Model model) {
         //传入当前页，以及页面的大小
-        PageHelper.startPage(pn,2);
+        PageHelper.startPage(pn,5);
         String eCode = request.getParameter("examCode");
         String keyword = request.getParameter("keyword");
         List<Exam> exams = examService.queryAllExams();
@@ -186,7 +186,7 @@ public class ExamController {
     @RequestMapping(value = "paper")
     public String paper(@RequestParam(value="pn", defaultValue="1")Integer pn,Model model) {
         //传入当前页，以及页面的大小
-        PageHelper.startPage(pn,1);
+        PageHelper.startPage(pn,5);
         List<Paper> papers = paperService.queryAllPapersAdmin();
         List<Exam> exams = examService.queryAllExams();
         for(Paper paper: papers) {
@@ -269,7 +269,7 @@ public class ExamController {
         }
         System.out.println("paperName ==="+ paperName +"*******paperType ====" + paperType);
         //传入当前页，以及页面的大小
-        PageHelper.startPage(pn,1);
+        PageHelper.startPage(pn,5);
 //        List<Paper> papers = paperService.queryPapersByExamId(examId);
         List<Paper> papers = paperService.queryPapersByConditions(paperName,paperType);
         for(Paper paper: papers) {
@@ -331,7 +331,7 @@ public class ExamController {
     @RequestMapping(value = "queryExamsByName")
     public String queryExamsByName(String examName, Model model,@RequestParam(value="pn", defaultValue="1")Integer pn){
         //传入当前页，以及页面的大小
-        PageHelper.startPage(pn,1);
+        PageHelper.startPage(pn,5);
         System.out.println("examName====" + examName);
         List<Exam> exams = examService.queryExams(examName);
         for(Exam exam: exams) {
@@ -377,7 +377,7 @@ public class ExamController {
         System.out.println("userId******=====" + userId);
         System.out.println("*********************");
         //传入当前页，以及页面的大小
-        PageHelper.startPage(pn,1);
+        PageHelper.startPage(pn,5);
         //根据用户id查询考试记录
         List<Paper> papers = paperService.queryPapersByUserId(userId);
         for(Paper paper : papers){
