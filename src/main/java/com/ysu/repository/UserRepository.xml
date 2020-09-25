@@ -32,6 +32,10 @@
         </foreach>
     </delete>
 
+    <delete id="deleteUser" parameterType="integer">
+        delete from tb_user where UserId = #{userId}
+    </delete>
+
     <select id="validateLoginName" parameterType="java.lang.String" resultType="java.lang.String">
         SELECT  userName FROM tb_user WHERE userName=#{userName}
     </select>
@@ -46,7 +50,18 @@
         INSERT INTO tb_user (userName, password, userTrueName, createDate, email, active) VALUES (#{userName}, #{password}, #{userTrueName}, #{createDate}, #{email}, #{active})
     </insert>
 
+    <insert id="insertUser" parameterType="User">
+        <selectKey  keyProperty="userId" order="AFTER" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert tb_user(userName,userTrueName,active) values(#{userName},#{userTrueName},'0')
+    </insert>
+
     <update id="active">
         UPDATE tb_user set userState=0,active='' WHERE active=#{activeCode}
+    </update>
+
+    <update id="updateUser" parameterType="User">
+        update tb_user set userName = #{userName}, userTrueName = #{userTrueName} where UserId = #{userId}
     </update>
 </mapper>

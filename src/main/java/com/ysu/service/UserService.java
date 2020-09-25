@@ -47,5 +47,18 @@ public interface UserService {
      * */
     User getUserByActive(String activeCode);
 
+    /*
+    * 添加用户
+    * */
+    public void insertUser(User user);
 
+    /*
+    * 更新用户
+    * */
+    public void updateUser(User user);
+
+    /*
+    * 删除用户
+    * */
+    public void deleteUser(Integer userId);
 }

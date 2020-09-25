@@ -113,7 +113,9 @@ public class UserServiceImpl implements UserService {
     public User getUserByActive(String activeCode) {
         return userRepository.getUserByActive(activeCode);
     }
-/******************************************************************************************/
+
+
+    /******************************************************************************************/
     @Override
     public User queryUserById(Integer id) {
         return userRepository.queryUserById(id);
@@ -132,6 +134,31 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserRoles(Map<String, Object> map) {
         userRepository.deleteUserRoles(map);
+    }
+    /*****************************************************************************************/
+
+    /*
+     * 添加用户
+     * */
+    @Override
+    public void insertUser(User user) {
+        userRepository.insertUser(user);
+    }
+
+    /*
+     * 更新用户
+     * */
+    @Override
+    public void updateUser(User user) {
+        userRepository.updateUser(user);
+    }
+
+    /*
+     * 删除用户
+     * */
+    @Override
+    public void deleteUser(Integer userId){
+        userRepository.deleteUser(userId);
     }
 
 }

@@ -34,7 +34,6 @@ public class TestService {
     }
     @Test
     public void test2(){
-
         UserService userService=(UserService) context.getBean("userService");
         String message=userService.validateLoginName("test1");
         System.out.println(message+"***");
@@ -45,5 +44,31 @@ public class TestService {
         UserService userService = (UserService)context.getBean("userService");
         List<User> users = userService.queryAllUser();
         System.out.println("user====" + users);
+    }
+
+    @Test
+    public void testDeleteUser(){
+        UserService userService = (UserService)context.getBean("userService");
+        userService.deleteUser(27);
+    }
+    @Test
+    public void testUpdateUser(){
+        UserService userService = (UserService)context.getBean("userService");
+        User user =new User();
+        user.setUserId(26);
+        user.setUserName("爸爸");
+        user.setPassword("654321");
+        user.setUserTrueName("DAD");
+        userService.updateUser(user);
+    }
+    @Test
+    public void testInsertUser(){
+        UserService userService = (UserService)context.getBean("userService");
+        User user =new User();
+        user.setUserName("爸爸");
+        user.setPassword("654321");
+        user.setUserTrueName("DAD");
+        userService.insertUser(user);
+        System.out.println(user);
     }
 }

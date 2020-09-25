@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html;charset=UTF-8"
+		 pageEncoding="UTF-8"%>
 <%@page isELIgnored="false" %>
 
 <!-- 通过动态标签引入公共jsp页面 -->
@@ -51,14 +51,7 @@
 </head>
 <body>
 <!-- 横幅导航条开始 -->
-
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	<div class="container">
-		<div class="navbar-header">
-			<div><a class="navbar-brand" href="index.html" style="font-size:32px;">尚筹网-创意产品众筹平台</a></div>
-		</div>
-	</div>
-</nav>
+<%@include file="/WEB-INF/jsp/common/head.jsp"%>
 
 <!--  横幅下方的主体开始 -->
 <div class="container">
